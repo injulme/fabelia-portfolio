@@ -1,0 +1,3014 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Fabelia 포트폴리오</title>
+    <meta
+      name="description"
+      content="소설가를 위한 집필 도구 Fabelia를 1인 개발하며 내린 큰 결정과 기술적 고민을 타임라인과 이슈로 정리한 포트폴리오"
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Jost:wght@500;700;800&family=Noto+Serif+KR:wght@600;700&family=JetBrains+Mono:wght@400;600&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css"
+    />
+    <style>
+/* =========================================================
+   Fabelia 포트폴리오 — 스타일
+   색은 모두 :root 토큰으로 두고, 다크 모드는 토큰만 바꾼다
+   ========================================================= */
+
+:root {
+  --bg: #f7f5f0;
+  --surface: #ffffff;
+  --surface-muted: #f0ede6;
+  --ink: #1d1b18;
+  --ink-soft: #4a463f;
+  --ink-faint: #8a847a;
+  --line: #e2ddd2;
+  --accent: #b4532a; /* 잉크·원고지 느낌의 테라코타 */
+  --accent-soft: #f6e6dc;
+  --good: #2f6b4f;
+  --good-soft: #e1efe7;
+  --warn: #8a5a12;
+  --warn-soft: #f6ecd6;
+  --code-bg: #f3f0ea;
+
+  /* 타임라인 시기별 색 */
+  --era-1: #7a6f9b;
+  --era-2: #3f7a8c;
+  --era-3: #b4532a;
+  --era-4: #2f6b4f;
+  --era-5: #9a6a1f;
+
+  --radius: 14px;
+  --radius-small: 8px;
+  --shadow: 0 1px 2px rgba(30, 25, 15, 0.04), 0 8px 24px rgba(30, 25, 15, 0.06);
+  --content-width: 980px; /* 본문 폭 — 조금 좁혔다(1040 → 980) */
+  --serif: 'Noto Serif KR', 'Nanum Myeongjo', serif;
+  --sans: 'Pretendard Variable', Pretendard, -apple-system, BlinkMacSystemFont, 'Apple SD Gothic Neo', 'Noto Sans KR',
+    sans-serif;
+  --mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #15140f;
+    --surface: #1d1c17;
+    --surface-muted: #24221c;
+    --ink: #f1ede4;
+    --ink-soft: #c9c3b6;
+    --ink-faint: #8f897d;
+    --line: #34312a;
+    --accent: #e08a5f;
+    --accent-soft: #3a2519;
+    --good: #7cc29d;
+    --good-soft: #1b2e24;
+    --warn: #e0b064;
+    --warn-soft: #33281a;
+    --code-bg: #26241e;
+    --era-1: #a99bd1;
+    --era-2: #7cb7c9;
+    --era-3: #e08a5f;
+    --era-4: #7cc29d;
+    --era-5: #e0b064;
+    --shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 8px 24px rgba(0, 0, 0, 0.25);
+  }
+}
+
+/* ---------- 기본 ---------- */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--sans);
+  font-size: 16px;
+  line-height: 1.75;
+  word-break: keep-all;
+  overflow-wrap: anywhere;
+}
+
+a {
+  color: var(--accent);
+  text-decoration: none;
+}
+a:hover {
+  text-decoration: underline;
+}
+
+code {
+  font-family: var(--mono);
+  font-size: 0.86em;
+  background: var(--code-bg);
+  padding: 0.1em 0.4em;
+  border-radius: 4px;
+  overflow-wrap: anywhere;
+}
+
+.container {
+  max-width: var(--content-width);
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+section {
+  padding: 72px 0;
+}
+
+.section-label {
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin: 0 0 8px;
+}
+
+h2.section-title {
+  font-family: var(--serif);
+  font-size: clamp(26px, 4vw, 34px);
+  line-height: 1.35;
+  margin: 0 0 12px;
+}
+
+.section-lead {
+  color: var(--ink-soft);
+  margin: 0 0 40px;
+}
+
+/* ---------- 상단 내비 ---------- */
+.top-nav {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background: color-mix(in srgb, var(--bg) 88%, transparent);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--line);
+}
+.top-nav > .container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  height: 56px;
+}
+.top-nav .brand {
+  font-family: var(--serif);
+  font-weight: 700;
+  color: var(--ink);
+}
+.top-nav ul {
+  display: flex;
+  gap: 20px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  font-size: 14px;
+}
+.top-nav ul a {
+  color: var(--ink-soft);
+}
+
+/* ---------- 히어로 ---------- */
+.hero {
+  padding: 88px 0 56px;
+}
+.hero .eyebrow {
+  display: inline-block;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--accent);
+  background: var(--accent-soft);
+  padding: 4px 12px;
+  border-radius: 999px;
+  margin-bottom: 20px;
+}
+.hero h1 {
+  font-family: var(--serif);
+  font-size: clamp(40px, 7vw, 64px);
+  line-height: 1.15;
+  margin: 0 0 16px;
+  letter-spacing: -0.01em;
+}
+.hero .tagline {
+  font-size: clamp(18px, 2.4vw, 21px);
+  color: var(--ink-soft);
+  margin: 0 0 32px;
+}
+.hero .summary {
+  color: var(--ink-soft);
+  margin: 0 0 40px;
+}
+.hero .summary strong {
+  color: var(--ink);
+}
+
+.meta-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr)); /* 기간 · 역할 · 플랫폼 세 칸 */
+  gap: 12px;
+  margin-bottom: 40px;
+}
+.meta-grid .meta {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-small);
+  padding: 14px 16px;
+}
+.meta-grid .meta-key {
+  font-size: 12px;
+  color: var(--ink-faint);
+  margin-bottom: 2px;
+}
+.meta-grid .meta-value {
+  font-weight: 600;
+  font-size: 15px;
+}
+
+.stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 12px;
+}
+.stat {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 20px;
+  box-shadow: var(--shadow);
+}
+.stat .number {
+  font-family: var(--serif);
+  font-size: 34px;
+  font-weight: 700;
+  line-height: 1.1;
+  color: var(--accent);
+}
+.stat .label {
+  font-size: 14px;
+  color: var(--ink-soft);
+  margin-top: 6px;
+}
+.stat .basis {
+  font-size: 12px;
+  color: var(--ink-faint);
+  margin-top: 4px;
+}
+
+/* ---------- 기술 스택 ---------- */
+.stack-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  overflow: hidden;
+  font-size: 15px;
+}
+.stack-table th,
+.stack-table td {
+  text-align: left;
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--line);
+  vertical-align: top;
+}
+.stack-table tr:last-child td {
+  border-bottom: none;
+}
+.stack-table th {
+  background: var(--surface-muted);
+  font-size: 13px;
+  color: var(--ink-soft);
+  font-weight: 600;
+}
+.stack-table td:first-child {
+  font-weight: 600;
+  white-space: nowrap;
+  width: 140px;
+}
+.stack-table td:nth-child(2) {
+  width: 260px;
+}
+.table-scroll {
+  overflow-x: auto;
+  border-radius: var(--radius);
+}
+
+/* ---------- 타임라인 ---------- */
+.era-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 16px;
+  margin: 0 0 32px;
+  padding: 0;
+  list-style: none;
+  font-size: 13px;
+  color: var(--ink-soft);
+}
+.era-legend li {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.era-legend .swatch {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+}
+
+/* 가운데 축 타임라인 — 왼쪽 열은 기획·구현, 오른쪽 열은 이슈·버그.
+   목록은 날짜순 한 줄(li)이고 열만 고른다 — 이슈 레일 스크립트가 .timeline > li를 그 순서로 읽는다.
+   기획 다음에 이슈가 오면 같은 행에 나란히 놓이고, 이슈 다음 기획은 다음 행으로 내려간다(그리드 자동 배치). */
+.timeline-sides {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 56px minmax(0, 1fr);
+  margin: 36px 0 8px;
+}
+.side-head {
+  font-family: var(--mono);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  color: var(--ink-faint);
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--line);
+}
+.side-head-plan {
+  grid-column: 1;
+  text-align: right;
+}
+.side-head-issue {
+  grid-column: 3;
+}
+.timeline {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 56px minmax(0, 1fr);
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.timeline::before {
+  content: '';
+  position: absolute;
+  left: calc(50% - 1px);
+  top: 0;
+  bottom: 6px;
+  width: 2px;
+  background: var(--line);
+}
+
+.era-heading {
+  grid-column: 1 / -1;
+  justify-self: center;
+  position: relative;
+  z-index: 1;
+  margin: 28px 0 10px;
+  padding: 8px 20px;
+  background: var(--bg);
+  text-align: center;
+  font-family: var(--serif);
+  font-size: 19px;
+  font-weight: 700;
+}
+.era-heading .era-range {
+  display: block;
+  font-family: var(--sans);
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--ink-faint);
+}
+.era-heading:first-child {
+  margin-top: 8px;
+}
+
+.event {
+  position: relative;
+  padding: 10px 0;
+}
+.event.side-plan {
+  grid-column: 1;
+}
+.event.side-issue {
+  grid-column: 3;
+  /* 같은 행의 기획 사건보다 조금 아래에서 시작한다 — 축 위의 점이 겹치지 않고, 「그 뒤에 만난 문제」로 읽힌다 */
+  padding-top: 38px;
+}
+.event .date {
+  font-family: var(--mono);
+  font-size: 13px;
+  color: var(--ink-faint);
+  line-height: 20px;
+  margin-bottom: 6px;
+}
+.event.side-plan .date {
+  text-align: right;
+}
+/* 축 위의 점 — 축은 가운데 열(56px)의 한가운데다 */
+.event::before {
+  content: '';
+  position: absolute;
+  top: 13px;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: var(--surface);
+  border: 3px solid var(--era-color, var(--accent));
+  z-index: 1;
+}
+.event.side-plan::before {
+  right: -35px;
+}
+.event.side-issue::before {
+  left: -35px;
+  top: 41px;
+  border-radius: 2px;
+  transform: rotate(45deg) scale(0.85);
+  background: var(--accent);
+  border-color: var(--accent);
+}
+/* 카드 쪽에서 축으로 잇는 짧은 선 */
+.event::after {
+  content: '';
+  position: absolute;
+  top: 20px;
+  width: 21px;
+  border-top: 1px dashed var(--ink-faint);
+}
+.event.side-plan::after {
+  right: -21px;
+}
+.event.side-issue::after {
+  left: -21px;
+  top: 48px;
+}
+.event.side-plan .card {
+  border-left: 1px solid var(--line);
+  border-right: 4px solid var(--era-color, var(--accent));
+}
+.event.side-issue .card {
+  background: var(--surface-muted);
+}
+.side-badge {
+  display: inline-block;
+  margin-bottom: 6px;
+  padding: 1px 8px;
+  border: 1px solid var(--accent);
+  border-radius: var(--radius-small);
+  font-family: var(--mono);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  color: var(--accent);
+}
+.event.major::before {
+  background: var(--era-color, var(--accent));
+}
+.event .card {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-left: 3px solid var(--era-color, var(--accent));
+  border-radius: var(--radius-small);
+  padding: 14px 18px;
+}
+.event.major .card {
+  box-shadow: var(--shadow);
+}
+.event h3 {
+  font-size: 16px;
+  margin: 0 0 4px;
+  line-height: 1.5;
+}
+.event p {
+  margin: 0;
+  font-size: 14.5px;
+  color: var(--ink-soft);
+}
+.event .tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 10px;
+}
+.tag {
+  font-size: 12px;
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: var(--surface-muted);
+  color: var(--ink-soft);
+  border: 1px solid var(--line);
+}
+.tag.issue-link {
+  background: var(--accent-soft);
+  color: var(--accent);
+  border-color: transparent;
+  font-weight: 600;
+}
+.tag.removed {
+  background: var(--warn-soft);
+  color: var(--warn);
+  border-color: transparent;
+}
+
+.era-1 {
+  --era-color: var(--era-1);
+}
+.era-2 {
+  --era-color: var(--era-2);
+}
+.era-3 {
+  --era-color: var(--era-3);
+}
+.era-4 {
+  --era-color: var(--era-4);
+}
+.era-5 {
+  --era-color: var(--era-5);
+}
+
+/* ---------- 목차 ---------- */
+.toc,
+.toc-issues {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.toc {
+  border-top: 1px solid var(--line);
+}
+.toc-chapter {
+  border-bottom: 1px solid var(--line);
+}
+.toc a {
+  display: flex;
+  align-items: baseline;
+  gap: 14px;
+  padding: 16px 4px;
+  color: var(--ink);
+}
+.toc a:hover {
+  text-decoration: none;
+}
+.toc a:hover .toc-title {
+  color: var(--accent);
+}
+.toc .toc-number {
+  flex: 0 0 34px;
+  font-family: var(--mono);
+  font-size: 13px;
+  color: var(--accent);
+}
+.toc-chapter > a .toc-title {
+  font-size: 18px;
+  font-weight: 700;
+}
+.toc .toc-leader {
+  flex: 1 1 24px;
+  min-width: 24px;
+  border-bottom: 1px dotted var(--ink-faint);
+  transform: translateY(-4px);
+}
+.toc .toc-meta {
+  flex: 0 0 auto;
+  font-family: var(--mono);
+  font-size: 12px;
+  color: var(--ink-faint);
+  white-space: nowrap;
+}
+.toc-issues {
+  padding: 0 0 12px 48px;
+}
+.toc-issues a {
+  padding: 7px 4px;
+}
+.toc-issues .toc-number {
+  flex-basis: 26px;
+  font-size: 12px;
+}
+.toc-issues .toc-title {
+  font-size: 15px;
+  line-height: 1.5;
+}
+@media (max-width: 600px) {
+  .toc a {
+    flex-wrap: wrap;
+    gap: 2px 10px;
+  }
+  .toc .toc-leader {
+    display: none;
+  }
+  .toc .toc-title {
+    flex: 1 1 0;
+    min-width: 0;
+  }
+  .toc .toc-meta {
+    flex-basis: 100%;
+    padding-left: 44px;
+  }
+  .toc-issues {
+    padding-left: 12px;
+  }
+  .toc-issues .toc-meta {
+    padding-left: 36px;
+  }
+}
+@media print {
+  .toc .toc-leader {
+    border-bottom-color: #999;
+  }
+}
+
+/* ---------- 이슈 목차 ---------- */
+.issue-index {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 12px;
+  list-style: none;
+  padding: 0;
+  margin: 0 0 56px;
+  counter-reset: issue;
+}
+.issue-index a {
+  display: block;
+  height: 100%;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-small);
+  padding: 14px 16px;
+  color: var(--ink);
+}
+.issue-index a:hover {
+  border-color: var(--accent);
+  text-decoration: none;
+}
+.issue-index .index-number {
+  font-family: var(--mono);
+  font-size: 12px;
+  color: var(--accent);
+}
+.issue-index .index-title {
+  display: block;
+  font-weight: 600;
+  font-size: 15px;
+  line-height: 1.5;
+}
+
+/* ---------- 이슈 본문 ---------- */
+.issue {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 40px;
+  margin-bottom: 32px;
+  scroll-margin-top: 72px;
+}
+.issue-header {
+  border-bottom: 1px solid var(--line);
+  padding-bottom: 20px;
+  margin-bottom: 24px;
+}
+.issue-header .issue-number {
+  font-family: var(--mono);
+  font-size: 13px;
+  color: var(--accent);
+  font-weight: 600;
+}
+.issue-header h3 {
+  font-family: var(--serif);
+  font-size: clamp(21px, 3vw, 26px);
+  line-height: 1.4;
+  margin: 4px 0 10px;
+}
+.issue-header .issue-summary {
+  color: var(--ink-soft);
+  margin: 0 0 14px;
+}
+.issue-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.issue h4 {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 15px;
+  margin: 28px 0 10px;
+  color: var(--ink);
+}
+.issue h4::before {
+  content: '';
+  width: 6px;
+  height: 18px;
+  border-radius: 3px;
+  background: var(--accent);
+}
+.issue h4.result-heading::before {
+  background: var(--good);
+}
+.issue h4.retro-heading::before {
+  background: var(--warn);
+}
+
+.issue p,
+.issue li {
+  font-size: 15px;
+  color: var(--ink-soft);
+}
+.issue p {
+  margin: 0 0 10px;
+}
+.issue ul,
+.issue ol {
+  margin: 0 0 10px;
+  padding-left: 22px;
+}
+.issue li {
+  margin-bottom: 6px;
+}
+.issue li strong,
+.issue p strong {
+  color: var(--ink);
+}
+
+.compare {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+  margin: 6px 0 12px;
+  min-width: 560px;
+}
+.compare th,
+.compare td {
+  border: 1px solid var(--line);
+  padding: 9px 12px;
+  text-align: left;
+  vertical-align: top;
+}
+.compare th {
+  background: var(--surface-muted);
+  font-weight: 600;
+  color: var(--ink-soft);
+}
+.compare td {
+  color: var(--ink-soft);
+}
+.compare tr.chosen td {
+  background: var(--good-soft);
+  color: var(--ink);
+}
+.compare tr.chosen td:first-child::after {
+  content: ' ✓';
+  color: var(--good);
+  font-weight: 700;
+}
+
+.decision {
+  background: var(--accent-soft);
+  border-radius: var(--radius-small);
+  padding: 14px 18px;
+  margin: 8px 0 12px;
+}
+.decision p {
+  margin: 0;
+  color: var(--ink);
+}
+.decision p + p {
+  margin-top: 6px;
+}
+
+.flow {
+  font-family: var(--mono);
+  font-size: 13px;
+  line-height: 1.7;
+  background: var(--code-bg);
+  border-radius: var(--radius-small);
+  padding: 16px 18px;
+  margin: 8px 0 14px;
+  overflow-x: auto;
+  white-space: pre;
+  color: var(--ink);
+}
+
+.result-list {
+  list-style: none;
+  padding: 0 !important;
+}
+.result-list li {
+  position: relative;
+  padding-left: 22px;
+}
+.result-list li::before {
+  content: '→';
+  position: absolute;
+  left: 0;
+  color: var(--good);
+  font-weight: 700;
+}
+
+/* 회고 네 칸(잘한 점 · 아쉬운 점 · 배운 점 · 다음에는)은 2×2로 — 좁은 화면에서는 한 줄씩 */
+.retro {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+@media (max-width: 720px) {
+  .retro {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+.retro > div {
+  background: var(--surface-muted);
+  border-radius: var(--radius-small);
+  padding: 14px 16px;
+}
+.retro .retro-title {
+  font-size: 13px;
+  font-weight: 700;
+  margin-bottom: 4px;
+  color: var(--ink);
+}
+.retro p {
+  font-size: 14px;
+  margin: 0;
+}
+
+/* ---------- 마무리 ---------- */
+.closing {
+  background: var(--surface);
+  border-top: 1px solid var(--line);
+}
+/* 일하는 방식 — 번호를 크게 단 세로 목록(목차와 같은 결) */
+.closing-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  border-top: 1px solid var(--line);
+}
+.closing-list li {
+  display: grid;
+  grid-template-columns: 72px 1fr;
+  gap: 24px;
+  padding: 28px 0;
+  border-bottom: 1px solid var(--line);
+}
+.closing-num {
+  font-family: var(--serif);
+  font-size: 34px;
+  font-weight: 700;
+  line-height: 1;
+  color: var(--accent);
+}
+.closing-list h3 {
+  font-family: var(--serif);
+  font-size: 19px;
+  margin: 0 0 4px;
+}
+.closing-list .closing-sub {
+  margin: 0 0 10px;
+  font-weight: 600;
+  color: var(--accent);
+}
+.closing-list p {
+  margin: 0;
+  max-width: 68ch;
+  font-size: 15px;
+  color: var(--ink-soft);
+}
+@media (max-width: 720px) {
+  .closing-list li {
+    grid-template-columns: 44px 1fr;
+    gap: 14px;
+    padding: 22px 0;
+  }
+  .closing-num {
+    font-size: 24px;
+  }
+}
+
+footer {
+  padding: 32px 0 48px;
+  font-size: 13px;
+  color: var(--ink-faint);
+}
+
+/* ---------- 반응형 ---------- */
+@media (max-width: 720px) {
+  section {
+    padding: 56px 0;
+  }
+  .container {
+    padding: 0 16px;
+  }
+  .top-nav ul {
+    display: none;
+  }
+  /* 휴대폰에서는 축을 왼쪽으로 옮겨 한 줄로 쌓는다 — 이슈·버그는 카드의 표식으로 가른다 */
+  .timeline-sides {
+    display: none;
+  }
+  .timeline {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .timeline::before {
+    left: 7px;
+  }
+  .era-heading {
+    justify-self: start;
+    text-align: left;
+    margin: 24px 0 6px;
+    padding: 4px 0 4px 32px;
+  }
+  .event.side-plan,
+  .event.side-issue {
+    grid-column: 1;
+    padding-left: 32px;
+  }
+  .event.side-plan .date {
+    text-align: left;
+  }
+  .event.side-plan::before,
+  .event.side-issue::before {
+    left: 1px;
+    right: auto;
+  }
+  .event.side-issue {
+    padding-top: 10px;
+  }
+  .event.side-issue::before {
+    top: 13px;
+  }
+  .event::after {
+    display: none;
+  }
+  .event.side-plan .card {
+    border-right: 1px solid var(--line);
+    border-left: 4px solid var(--era-color, var(--accent));
+  }
+  .issue {
+    padding: 24px 18px;
+  }
+  /* 휴대폰에서는 기술 스택 표를 행마다 카드처럼 쌓는다 */
+  .stack-table thead {
+    display: none;
+  }
+  .stack-table,
+  .stack-table tbody,
+  .stack-table tr,
+  .stack-table td {
+    display: block;
+    width: auto !important;
+  }
+  .stack-table tr {
+    border-bottom: 1px solid var(--line);
+    padding: 12px 0;
+  }
+  .stack-table tr:last-child {
+    border-bottom: none;
+  }
+  .stack-table td {
+    border-bottom: none;
+    padding: 2px 16px;
+  }
+  .stack-table td:first-child {
+    font-size: 12px;
+    color: var(--accent);
+  }
+  .stack-table td:nth-child(2) {
+    font-weight: 600;
+  }
+  .stack-table td:nth-child(3) {
+    font-size: 14px;
+    color: var(--ink-soft);
+  }
+}
+
+/* ---------- 인쇄(PDF 저장) ---------- */
+@media print {
+  .top-nav {
+    display: none;
+  }
+  body {
+    background: #fff;
+  }
+  .issue,
+  .event .card,
+  .stat {
+    box-shadow: none;
+    break-inside: avoid;
+  }
+  section {
+    padding: 32px 0;
+  }
+}
+
+/* =========================================================
+   이슈 구역 왼쪽의 세로 타임라인 (v2)
+   이슈를 번호순으로 늘어놓고 기간 막대를 그리며, 지금 읽는 이슈를 강조한다
+   ========================================================= */
+.container-wide {
+  max-width: 1200px;
+}
+
+.issues-layout {
+  display: grid;
+  grid-template-columns: 248px minmax(0, 1fr);
+  gap: 40px;
+  align-items: start;
+}
+
+.issue-rail {
+  position: sticky;
+  top: 76px;
+}
+.rail-sticky {
+  display: flex;
+  flex-direction: column;
+  max-height: calc(100vh - 96px);
+}
+
+/* 지금 보는 이슈 */
+.rail-current {
+  flex: none;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 12px 14px;
+  border: 1px solid var(--line);
+  border-left: 3px solid var(--accent);
+  border-radius: var(--radius-small);
+  background: var(--surface);
+  line-height: 1.45;
+}
+.rail-current-kind {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: var(--ink-faint);
+}
+.rail-current-number {
+  font-family: var(--mono);
+  font-size: 13px;
+  color: var(--accent);
+}
+.rail-current-title {
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--ink);
+}
+.rail-current-period {
+  font-family: var(--mono);
+  font-size: 12px;
+  color: var(--ink-soft);
+}
+
+.rail-title {
+  flex: none;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  color: var(--ink-faint);
+  margin: 18px 0 6px;
+}
+
+/* 기간 막대의 눈금 — 첫 달과 마지막 달 */
+.rail-axis {
+  flex: none;
+  display: flex;
+  justify-content: space-between;
+  margin: 0 4px 4px 34px;
+  font-family: var(--mono);
+  font-size: 10.5px;
+  color: var(--ink-faint);
+}
+
+/* 세로 타임라인 — 이슈를 번호순으로, 본문 타임라인과 같은 선·점 모양을 작게 */
+.rail-timeline {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  list-style: none;
+  margin: 0;
+  /* 선택된 점은 확대되고 겹테가 둘러지므로 위에 여유를 둔다. 왼쪽 여유는 항목(button) 안쪽에 두어 배경이 점까지 덮게 한다 */
+  padding: 8px 4px 12px 0;
+}
+.rail-timeline::before {
+  content: '';
+  position: absolute;
+  left: 18px;
+  top: 12px;
+  bottom: 12px;
+  /* 선택된 항목의 배경 위로 올려, 강조 중에도 선이 끊기지 않게 한다 */
+  z-index: 1;
+  width: 2px;
+  background: var(--line);
+}
+
+.rail-issue {
+  position: relative;
+}
+.rail-issue button {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  width: 100%;
+  padding: 5px 4px 7px 34px;
+  border: none;
+  border-radius: 6px;
+  background: none;
+  font: inherit;
+  text-align: left;
+  color: var(--ink-soft);
+  cursor: pointer;
+  transition: background 0.15s, color 0.2s, opacity 0.2s;
+}
+.rail-issue button:hover,
+.rail-issue button:focus-visible {
+  background: var(--surface-muted);
+  outline: none;
+}
+/* 점 */
+.rail-issue button::before {
+  content: '';
+  position: absolute;
+  left: 14px;
+  top: 10px;
+  /* 점은 선보다 위 */
+  z-index: 2;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  border: 2px solid var(--accent);
+  background: var(--bg);
+  transition: transform 0.2s, background 0.2s, box-shadow 0.2s;
+}
+.rail-issue .rail-period {
+  font-family: var(--mono);
+  font-size: 11px;
+  line-height: 18px;
+  color: var(--ink-faint);
+}
+.rail-issue .rail-label {
+  display: flex;
+  gap: 6px;
+  font-size: 12.5px;
+  line-height: 1.45;
+}
+.rail-issue .rail-number {
+  flex: none;
+  font-family: var(--mono);
+  font-weight: 700;
+  color: var(--accent);
+}
+.rail-issue .rail-name {
+  min-width: 0;
+}
+/* 기간 막대 — 2026.02~2026.11 위에서 이슈가 걸친 달 */
+.rail-issue .rail-bar {
+  position: relative;
+  height: 4px;
+  margin-top: 4px;
+  border-radius: 2px;
+  background: var(--line);
+}
+.rail-issue .rail-span {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  border-radius: 2px;
+  background: var(--ink-faint);
+}
+/* 진행 중 — 끝을 열어 둔다 */
+.rail-issue .rail-span.is-ongoing {
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
+/* 이슈를 읽는 동안: 다른 이슈는 흐리게 */
+.rail-timeline.has-issue .rail-issue button {
+  opacity: 0.5;
+}
+.rail-timeline.has-issue .rail-issue.is-current button {
+  opacity: 1;
+  color: var(--ink);
+  background: var(--accent-soft);
+}
+.rail-issue.is-current button::before {
+  background: var(--accent);
+  transform: scale(1.25);
+}
+.rail-issue.is-current .rail-name {
+  font-weight: 700;
+}
+.rail-issue.is-current .rail-span {
+  background: var(--accent);
+}
+
+/* 지금 읽는 이슈 카드 */
+.issue.is-current {
+  border-color: color-mix(in srgb, var(--accent) 45%, var(--line));
+}
+
+/* 좁은 화면에서는 세로 타임라인을 숨기고 이슈만 보인다 */
+@media (max-width: 1000px) {
+  .issues-layout {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .issue-rail {
+    display: none;
+  }
+}
+
+@media print {
+  .issues-layout {
+    display: block;
+  }
+  .issue-rail {
+    display: none;
+  }
+}
+
+/* ---------- 맨 위로 버튼 ---------- */
+.to-top {
+  position: fixed;
+  right: 24px;
+  bottom: 24px;
+  z-index: 50;
+  display: grid;
+  place-items: center;
+  width: 48px;
+  height: 48px;
+  border: 1px solid var(--line);
+  border-radius: 50%;
+  background: var(--surface);
+  color: var(--accent);
+  box-shadow: var(--shadow);
+  cursor: pointer;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(12px);
+  transition: opacity 0.2s, transform 0.2s, visibility 0.2s;
+}
+.to-top.is-visible {
+  opacity: 1;
+  visibility: visible;
+  transform: none;
+}
+.to-top:hover {
+  box-shadow: var(--shadow-lift);
+  transform: translateY(-2px);
+}
+.to-top:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+@media (max-width: 720px) {
+  .to-top {
+    right: 16px;
+    bottom: 16px;
+    width: 44px;
+    height: 44px;
+  }
+}
+@media print {
+  .to-top {
+    display: none;
+  }
+}
+
+/* ---------- 첫 화면 서비스 주소 카드 ---------- */
+.stat-link {
+  display: block;
+  color: inherit;
+  text-decoration: none;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+.stat-link:hover {
+  text-decoration: none;
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-lift);
+}
+.stat-link .label {
+  margin-top: 0;
+}
+.stat .number.url {
+  font-size: clamp(24px, 3.2vw, 34px);
+  margin: 6px 0 4px;
+  overflow-wrap: anywhere;
+}
+.stat .number .arrow {
+  font-family: var(--sans);
+  font-size: 0.6em;
+  margin-left: 8px;
+  vertical-align: 0.25em;
+  opacity: 0.8;
+}
+
+@media (max-width: 720px) {
+  .meta-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+    </style>
+    <style>
+/* =========================================================
+   「고서점의 원고」 테마 — style.css 위에 덮어쓰는 층
+   팔레트(사용자 지정 5색):
+     #4D4F3A 올리브 가죽 · #7F7E60 카키 · #AF673F 시에나 · #D28760 테라코타 · #E5BF9C 모래
+   분위기: 오래된 서점의 가죽 장정본과 누렇게 바랜 원고지 —
+          가죽 표지 같은 첫 화면, 밀랍 봉인, 이중 테두리, 바느질 같은 점선, 명조 제목 · 그러데이션 없음
+   이 파일을 빼면 원래 디자인 (파스텔 = pastel.css · 픽셀 = pixel.css · 웹소설 = webnovel.css · 바우하우스 = bauhaus.css)
+   ========================================================= */
+
+:root {
+  color-scheme: light; /* 라이트 모드 고정 */
+
+  /* 팔레트 */
+  --olive: #4d4f3a;
+  --khaki: #7f7e60;
+  --sienna: #af673f;
+  --terracotta: #d28760;
+  --sand: #e5bf9c;
+
+  /* 팔레트에서 끌어낸 종이·잉크 */
+  --bg: #f6efe4; /* 바랜 원고지 */
+  --surface: #fcf8f1;
+  --surface-muted: #f1e6d5;
+  --ink: #2c2d20; /* 올리브를 더 어둡게 */
+  --ink-soft: #4d4f3a;
+  --ink-faint: #7f7e60;
+  --line: #ddcdb5;
+
+  --accent: var(--sienna);
+  --accent-soft: #f4e2d2;
+  --good: var(--olive);
+  --good-soft: #ebe9da;
+  --warn: var(--sienna);
+  --warn-soft: #f4e2d2;
+  --code-bg: #efe4d2;
+
+  --era-1: var(--khaki);
+  --era-2: var(--olive);
+  --era-3: var(--sienna);
+  --era-4: var(--terracotta);
+  --era-5: var(--sand);
+
+  --radius: 4px;
+  --radius-small: 3px;
+  --shadow: 0 1px 0 var(--line), 0 6px 18px rgba(77, 79, 58, 0.08);
+  --shadow-lift: 0 1px 0 var(--line), 0 12px 28px rgba(77, 79, 58, 0.14);
+
+  --serif: 'Noto Serif KR', 'Nanum Myeongjo', serif;
+}
+
+/* ---------- 전체 ---------- */
+body {
+  background: var(--bg);
+}
+h1,
+h2,
+h3,
+.era-heading,
+.stat .number,
+.issue-index .index-number,
+.rail-current-number {
+  font-family: var(--serif);
+}
+a {
+  color: var(--sienna);
+  text-decoration-color: var(--sand);
+  text-decoration-thickness: 2px;
+  text-underline-offset: 3px;
+}
+::selection {
+  background: var(--sand);
+  color: var(--ink);
+}
+
+/* 구역 라벨 — 장식 꽃무늬 */
+.section-label {
+  color: var(--sienna);
+  letter-spacing: 0.24em;
+}
+.section-label::before {
+  content: '❧  ';
+  letter-spacing: 0;
+  color: var(--khaki);
+}
+h2.section-title {
+  color: var(--ink);
+  font-weight: 700;
+}
+/* 제목 아래 짧은 이중선 */
+h2.section-title::after {
+  content: '';
+  display: block;
+  width: 56px;
+  margin-top: 14px;
+  border-top: 4px double var(--terracotta);
+}
+
+/* ---------- 상단 내비 ---------- */
+.top-nav {
+  background: var(--olive);
+  border-bottom: 3px double var(--sand);
+}
+.top-nav .brand {
+  color: var(--sand);
+  font-size: 19px;
+  letter-spacing: 0.04em;
+}
+.top-nav ul a {
+  color: #efe2cf;
+  text-decoration: none;
+  letter-spacing: 0.04em;
+}
+.top-nav ul a:hover {
+  color: var(--sand);
+  text-decoration: underline;
+}
+
+/* ---------- 히어로: 가죽 장정 표지 ---------- */
+.hero {
+  position: relative;
+  overflow: hidden;
+  background: var(--olive);
+  color: #f3e7d6;
+}
+/* 표지의 이중 금박 테두리 */
+.hero::before {
+  content: '';
+  position: absolute;
+  inset: 20px;
+  border: 1px solid rgba(229, 191, 156, 0.55);
+  outline: 1px solid rgba(229, 191, 156, 0.35);
+  outline-offset: 6px;
+  pointer-events: none;
+}
+/* 오른쪽 위의 밀랍 봉인 */
+.hero::after {
+  content: 'F';
+  position: absolute;
+  right: max(64px, calc(50% - 470px));
+  top: 72px;
+  width: 128px;
+  height: 128px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: var(--sienna);
+  box-shadow:
+    0 0 0 6px var(--terracotta),
+    0 0 0 8px var(--olive),
+    0 0 0 10px var(--sand);
+  color: var(--sand);
+  font-family: var(--serif);
+  font-size: 64px;
+  font-weight: 700;
+  line-height: 1;
+}
+.hero .container {
+  position: relative;
+  z-index: 1;
+}
+.hero .eyebrow {
+  background: transparent;
+  color: var(--sand);
+  border: 1px solid var(--sand);
+  border-radius: 2px;
+  letter-spacing: 0.08em;
+}
+.hero h1 {
+  font-weight: 700;
+  font-size: clamp(52px, 9vw, 92px);
+  color: var(--sand);
+  letter-spacing: 0.01em;
+}
+/* 제목 옆 영문 표기 — 한글 제목보다 작고 가볍게 */
+.hero h1 .hero-en {
+  font-size: 0.36em;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  opacity: 0.85;
+  white-space: nowrap;
+}
+.hero .tagline {
+  color: #f3e7d6;
+  font-family: var(--serif);
+}
+.hero .summary {
+  color: #d9ccb6;
+}
+.hero .summary strong {
+  color: var(--sand);
+}
+.hero a {
+  color: var(--sand);
+}
+
+.meta-grid {
+  gap: 0;
+  border-top: 1px solid rgba(229, 191, 156, 0.4);
+  border-bottom: 1px solid rgba(229, 191, 156, 0.4);
+}
+.meta-grid .meta {
+  background: transparent;
+  border: none;
+  border-right: 1px dashed rgba(229, 191, 156, 0.35);
+  border-radius: 0;
+}
+.meta-grid .meta:last-child {
+  border-right: none;
+}
+.meta-grid .meta-key {
+  color: var(--terracotta);
+  letter-spacing: 0.06em;
+}
+.meta-grid .meta-value {
+  color: #f3e7d6;
+}
+
+.stats {
+  gap: 16px;
+}
+.stat {
+  border: none;
+  border-radius: var(--radius);
+  background: var(--sienna);
+  color: #fbefe2;
+  box-shadow: none;
+  outline: 1px solid rgba(229, 191, 156, 0.6);
+  outline-offset: -8px;
+}
+.stat:nth-child(2) {
+  background: var(--khaki);
+}
+.stat .number {
+  font-size: 48px;
+  color: var(--sand);
+}
+.stat .label {
+  color: #fbefe2;
+  font-weight: 600;
+}
+.stat .basis {
+  color: #f0dcc6;
+}
+.stat code {
+  background: rgba(0, 0, 0, 0.18);
+  color: #fbefe2;
+}
+
+/* ---------- 기술 스택 ---------- */
+.stack-table {
+  border: 1px solid var(--line);
+  box-shadow: var(--shadow);
+}
+.stack-table th {
+  background: var(--olive);
+  color: var(--sand);
+  letter-spacing: 0.04em;
+}
+.stack-table td {
+  border-bottom: 1px dashed var(--line);
+}
+.stack-table td:first-child {
+  color: var(--sienna);
+  font-family: var(--serif);
+}
+
+/* ---------- 타임라인 — 바느질 같은 점선 ---------- */
+.era-legend .swatch {
+  width: 12px;
+  height: 12px;
+  border: 1px solid var(--olive);
+}
+.timeline::before {
+  width: 0;
+  background: none;
+  border-left: 2px dashed var(--khaki);
+}
+.era-heading {
+  color: var(--olive);
+}
+.era-heading .era-range {
+  color: var(--khaki);
+}
+.event::before {
+  width: 14px;
+  height: 14px;
+  border: 2px solid var(--olive);
+  background: var(--bg);
+}
+/* 축 위의 동그라미는 시기·주요 여부와 상관없이 한 모양 — 올리브로 채우고 겹테를 두른다 */
+.event.side-plan::before {
+  background: var(--olive);
+  box-shadow: 0 0 0 3px var(--bg), 0 0 0 4px var(--olive);
+}
+.event .card {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-left: 4px solid var(--era-color);
+  border-radius: var(--radius-small);
+  box-shadow: none;
+  transition: box-shadow 0.2s, transform 0.2s;
+}
+.event.major .card {
+  box-shadow: var(--shadow);
+}
+.event .card:hover {
+  box-shadow: var(--shadow-lift);
+  transform: translateY(-2px);
+}
+.event .date {
+  color: var(--khaki);
+}
+.event h3 {
+  font-family: var(--serif);
+  color: var(--ink);
+}
+
+.tag {
+  background: transparent;
+  border: 1px solid var(--line);
+  border-radius: 2px;
+  color: var(--ink-soft);
+}
+.tag.issue-link {
+  background: var(--olive);
+  border-color: var(--olive);
+  color: var(--sand);
+  text-decoration: none;
+}
+.tag.issue-link:hover {
+  background: var(--sienna);
+  border-color: var(--sienna);
+}
+.tag.removed {
+  background: var(--accent-soft);
+  border-color: transparent;
+  color: var(--sienna);
+}
+
+/* ---------- 이슈 목차 — 책의 차례 ---------- */
+.issue-index a {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-small);
+  text-decoration: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+.issue-index a:hover {
+  border-color: var(--terracotta);
+  box-shadow: var(--shadow-lift);
+}
+.issue-index .index-number {
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--terracotta);
+}
+
+/* ---------- 이슈 본문 — 원고지 한 장 ---------- */
+.issue {
+  position: relative;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  /* 종이 안쪽의 얇은 이중 테두리 */
+  outline: 1px solid var(--line);
+  outline-offset: -10px;
+}
+.issue-header {
+  border-bottom: 3px double var(--line);
+}
+.issue-header .issue-number {
+  color: var(--sienna);
+  letter-spacing: 0.08em;
+}
+.issue-header h3 {
+  color: var(--ink);
+  font-weight: 700;
+}
+.issue h4 {
+  color: var(--olive);
+}
+.issue h4::before {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--sienna);
+}
+.issue h4.result-heading::before {
+  background: var(--olive);
+}
+.issue h4.retro-heading::before {
+  background: var(--terracotta);
+}
+
+.compare th,
+.compare td {
+  border: 1px solid var(--line);
+}
+.compare th {
+  background: var(--surface-muted);
+  color: var(--olive);
+}
+.compare tr.chosen td {
+  background: #efe9da;
+  color: var(--ink);
+  font-weight: 600;
+}
+.compare tr.chosen td:first-child::after {
+  content: ' ✦';
+  color: var(--sienna);
+}
+
+.decision {
+  background: var(--accent-soft);
+  border-left: 3px solid var(--sienna);
+  border-radius: var(--radius-small);
+}
+
+/* 흐름도는 가죽 위의 금박 글씨 */
+.flow {
+  background: var(--olive);
+  color: #efe2cf;
+  border-radius: var(--radius-small);
+}
+
+.result-list li::before {
+  content: '✦';
+  color: var(--terracotta);
+  font-weight: 400;
+}
+
+.retro > div {
+  background: var(--bg);
+  border: 1px dashed var(--khaki);
+  border-radius: var(--radius-small);
+}
+.retro .retro-title {
+  color: var(--sienna);
+  font-family: var(--serif);
+}
+
+/* ---------- 이슈 왼쪽 세로 타임라인 ---------- */
+.rail-current {
+  border: none;
+  border-radius: var(--radius-small);
+  background: var(--olive);
+  color: #f3e7d6;
+  outline: 1px solid rgba(229, 191, 156, 0.5);
+  outline-offset: -6px;
+}
+.rail-current-kind {
+  color: var(--terracotta);
+}
+.rail-current-number {
+  color: var(--sand);
+  font-size: 16px;
+}
+.rail-current-title {
+  color: #f3e7d6;
+}
+.rail-current-period {
+  color: #d9ccb6;
+}
+.rail-title {
+  color: var(--sienna);
+}
+.rail-timeline::before {
+  width: 0;
+  background: none;
+  border-left: 2px dashed var(--khaki);
+}
+.rail-axis {
+  color: var(--khaki);
+}
+.rail-issue button::before {
+  border-color: var(--olive);
+  background: var(--bg);
+}
+.rail-issue .rail-period {
+  color: var(--khaki);
+}
+.rail-issue .rail-number {
+  color: var(--sienna);
+}
+.rail-issue .rail-bar {
+  background: color-mix(in srgb, var(--sand) 45%, var(--bg));
+}
+.rail-issue .rail-span {
+  background: var(--khaki);
+}
+.rail-timeline.has-issue .rail-issue.is-current button {
+  background: var(--accent-soft);
+  color: var(--ink);
+}
+.rail-issue.is-current button::before {
+  background: var(--sienna);
+  border-color: var(--sienna);
+  box-shadow: 0 0 0 3px var(--bg), 0 0 0 4px var(--sienna);
+}
+.rail-issue.is-current .rail-period {
+  color: var(--sienna);
+}
+.rail-issue.is-current .rail-span {
+  background: var(--sienna);
+}
+.issue.is-current {
+  border-color: var(--terracotta);
+  box-shadow: var(--shadow-lift);
+}
+
+/* ---------- 마무리 ---------- */
+.closing {
+  background: var(--surface-muted);
+  border-top: 3px double var(--line);
+}
+.closing-grid > div {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-top: 4px solid var(--terracotta);
+}
+.closing-grid > div:nth-child(2) {
+  border-top-color: var(--khaki);
+}
+.closing-grid > div:nth-child(3) {
+  border-top-color: var(--olive);
+}
+.closing-grid h3 {
+  color: var(--ink);
+}
+footer {
+  color: var(--khaki);
+  text-align: center;
+}
+footer p::before {
+  content: '❦  ';
+  color: var(--terracotta);
+}
+
+/* ---------- 좁은 화면 ---------- */
+@media (max-width: 900px) {
+  .hero::after {
+    width: 72px;
+    height: 72px;
+    font-size: 36px;
+    right: 32px;
+    top: 36px;
+  }
+}
+@media (max-width: 720px) {
+  .hero::before {
+    inset: 10px;
+  }
+  .meta-grid .meta {
+    border-right: none;
+    border-bottom: 1px dashed rgba(229, 191, 156, 0.35);
+  }
+  .meta-grid .meta:last-child {
+    border-bottom: none;
+  }
+}
+
+/* ---------- 목차 — 장정본의 차례 면 ---------- */
+.contents {
+  background: var(--surface);
+  border-top: 4px double var(--line);
+  border-bottom: 4px double var(--line);
+}
+.toc {
+  border-top: 2px solid var(--olive);
+}
+.toc-chapter {
+  border-bottom-color: var(--line);
+}
+.toc .toc-number,
+.toc-chapter > a .toc-title,
+.toc-issues .toc-title {
+  font-family: var(--serif);
+}
+.toc-chapter > a .toc-number {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--sienna);
+}
+.toc-issues .toc-number {
+  color: var(--khaki);
+}
+.toc .toc-leader {
+  border-bottom: 2px dotted var(--sand);
+}
+.toc .toc-meta {
+  color: var(--khaki);
+}
+.toc a:hover .toc-title {
+  color: var(--sienna);
+}
+
+/* ---------- 맨 위로 버튼 — 밀랍 봉인 ---------- */
+.to-top {
+  background: var(--sienna);
+  border: 2px solid var(--sienna);
+  color: var(--sand);
+  box-shadow: 0 0 0 3px var(--bg), 0 0 0 4px var(--olive), var(--shadow);
+}
+.to-top:hover {
+  background: var(--olive);
+  border-color: var(--olive);
+  box-shadow: 0 0 0 3px var(--bg), 0 0 0 4px var(--olive), var(--shadow-lift);
+}
+
+    </style>
+  </head>
+  <body>
+    <!-- 상단 내비게이션 -->
+    <nav class="top-nav" aria-label="섹션 이동">
+      <div class="container">
+        <span class="brand">정효진 포트폴리오</span>
+        <ul>
+          <li><a href="#contents">목차</a></li>
+          <li><a href="#overview">개요</a></li>
+          <li><a href="#timeline">타임라인</a></li>
+          <li><a href="#issues">주요 이슈</a></li>
+          <li><a href="#closing">회고</a></li>
+        </ul>
+      </div>
+    </nav>
+
+    <!-- 히어로 -->
+    <header class="hero">
+      <div class="container">
+        <span class="eyebrow">1인 개발 · 기획부터 운영까지</span>
+        <h1>파벨리아 <span class="hero-en">(Fabelia)</span></h1>
+        <p class="tagline">
+          원고·인물·장소·플롯·관계도를 한 화면에 펼쳐 두고 쓰는, 소설가를 위한 집필 도구
+        </p>
+        <p class="summary">
+          Next.js 웹앱 하나를 <strong>기획·프론트엔드·백엔드·결제·배포까지 혼자</strong> 만들고 운영하고 있습니다.
+          9개월 동안 데이터 저장소를 <strong>IndexedDB → 로컬 폴더 → 서버(Supabase)</strong>로 세 차례 옮기면서도
+          화면 쪽 호출부를 거의 고치지 않도록 <strong>경로 기반 저장소 경계</strong>를 설계했고, 그 위에서 충돌 감지·복구
+          초안·원고 암호화·정기결제·AI 기능을 쌓았습니다.
+        </p>
+
+        <div class="meta-grid">
+          <div class="meta">
+            <div class="meta-key">기간</div>
+            <div class="meta-value">2026.02 – 진행 중</div>
+          </div>
+          <div class="meta">
+            <div class="meta-key">역할</div>
+            <div class="meta-value">1인 개발 (기여도 100%)</div>
+          </div>
+          <div class="meta">
+            <div class="meta-key">플랫폼</div>
+            <div class="meta-value">웹 · macOS(Electron) · iOS / Android(Capacitor, 심사 중)</div>
+          </div>
+        </div>
+
+        <div class="stats">
+          <a class="stat stat-link" href="https://fabelia.app" target="_blank" rel="noopener">
+            <div class="label">홍보 랜딩</div>
+            <div class="number url">fabelia.app<span class="arrow" aria-hidden="true">↗</span></div>
+            <div class="basis">서비스 소개 · 요금제 · 약관</div>
+          </a>
+          <a class="stat stat-link" href="https://app.fabelia.app" target="_blank" rel="noopener">
+            <div class="label">웹 앱</div>
+            <div class="number url">app.fabelia.app<span class="arrow" aria-hidden="true">↗</span></div>
+            <div class="basis">로그인하면 바로 집필 화면</div>
+          </a>
+        </div>
+      </div>
+    </header>
+
+    <!-- 목차 -->
+    <section id="contents" class="contents">
+      <div class="container">
+        <p class="section-label">Contents</p>
+        <h2 class="section-title">목차</h2>
+        <ol class="toc">
+          <li class="toc-chapter">
+            <a href="#overview"><span class="toc-number">I</span><span class="toc-title">무엇을, 무엇으로 만들었나</span><span class="toc-leader" aria-hidden="true"></span><span class="toc-meta">개요</span></a>
+          </li>
+          <li class="toc-chapter">
+            <a href="#timeline"><span class="toc-number">II</span><span class="toc-title">큰 변경과 기획의 흐름</span><span class="toc-leader" aria-hidden="true"></span><span class="toc-meta">타임라인</span></a>
+          </li>
+          <li class="toc-chapter">
+            <a href="#issues"><span class="toc-number">III</span><span class="toc-title">타임라인 뒤의 기술적 고민</span><span class="toc-leader" aria-hidden="true"></span><span class="toc-meta">주요 이슈 6</span></a>
+            <ol class="toc-issues">
+              <li><a href="#issue-1"><span class="toc-number">01</span><span class="toc-title">저장소 세 번의 전환과 서버 이관 결정</span><span class="toc-leader" aria-hidden="true"></span><span class="toc-meta">2026.04 – 10</span></a></li>
+              <li><a href="#issue-2"><span class="toc-number">02</span><span class="toc-title">원고 암호화와 무중단 운영 이관</span><span class="toc-leader" aria-hidden="true"></span><span class="toc-meta">2026.10</span></a></li>
+              <li><a href="#issue-3"><span class="toc-number">03</span><span class="toc-title">집필 에디터의 함정 — 공유 문서 · 한글 IME</span><span class="toc-leader" aria-hidden="true"></span><span class="toc-meta">2026.06 – 10</span></a></li>
+              <li><a href="#issue-4"><span class="toc-number">04</span><span class="toc-title">AI 기능 설계 — 원가, 동시성, 그리고 방향 전환</span><span class="toc-leader" aria-hidden="true"></span><span class="toc-meta">2026.09 – 11</span></a></li>
+              <li><a href="#issue-5"><span class="toc-number">05</span><span class="toc-title">웹 하나, 껍데기 셋 — Electron과 Capacitor</span><span class="toc-leader" aria-hidden="true"></span><span class="toc-meta">2026.08 – 진행 중</span></a></li>
+              <li><a href="#issue-6"><span class="toc-number">06</span><span class="toc-title">AI와 함께 개발하기 위한 문서 체계</span><span class="toc-leader" aria-hidden="true"></span><span class="toc-meta">2026.02 – 진행 중</span></a></li>
+            </ol>
+          </li>
+          <li class="toc-chapter">
+            <a href="#closing"><span class="toc-number">IV</span><span class="toc-title">이 프로젝트에서 얻은 것</span><span class="toc-leader" aria-hidden="true"></span><span class="toc-meta">회고</span></a>
+          </li>
+        </ol>
+      </div>
+    </section>
+
+    <!-- 개요 · 기술 스택 -->
+    <section id="overview">
+      <div class="container">
+        <p class="section-label">Overview</p>
+        <h2 class="section-title">무엇을, 무엇으로 만들었나</h2>
+        <p class="section-lead">
+          작가는 한 작품 안에서 원고와 설정 자료(인물·장소·위키), 플롯보드, 관계도를 계속 오갑니다. Fabelia는 이것을
+          <strong>파일 단위 JSON</strong>으로 다루고, 사이드바 파일 트리와 dockview 분할 패널 위에서 <strong>여러 문서를 동시에
+          띄워 편집</strong>하게 합니다.
+        </p>
+
+        <div class="table-scroll">
+          <table class="stack-table">
+            <thead>
+              <tr>
+                <th>영역</th>
+                <th>기술</th>
+                <th>내용</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Framework</td>
+                <td>Next.js 16 (App Router), React 19, TypeScript</td>
+                <td>집필 화면 · 서재 · 관리자 콘솔을 한 앱에서 제공</td>
+              </tr>
+              <tr>
+                <td>Editor · Layout</td>
+                <td>Tiptap 3 (ProseMirror), dockview, React Flow</td>
+                <td>리치텍스트 원고 · VSCode형 분할 패널 · 관계도 다이어그램</td>
+              </tr>
+              <tr>
+                <td>State · Form</td>
+                <td>Zustand, react-hook-form + zod</td>
+                <td>설정·레일 상태(persist) · 모든 입력 폼의 검증</td>
+              </tr>
+              <tr>
+                <td>Backend</td>
+                <td>Next.js Route Handler (Node.js 런타임), Supabase (Postgres RPC · Storage · RLS), Auth.js</td>
+                <td>REST API(<code>/v1/*</code>)와 AI·결제·크론 API, 작품·파일 행, 이미지 버킷, 구글 로그인 쿠키 세션</td>
+              </tr>
+              <tr>
+                <td>결제 · AI</td>
+                <td>나이스페이먼츠 빌링, OpenAI (Responses · Images API)</td>
+                <td>4등급 정기 구독 · 맞춤법/에이전트/원고 초안/이미지 생성</td>
+              </tr>
+              <tr>
+                <td>Infra</td>
+                <td>Vercel Pro (icn1), Vercel Firewall, Resend</td>
+                <td>배포 · 분당 요청 상한 · 피드백·계정 안내 메일</td>
+              </tr>
+              <tr>
+                <td>Shell</td>
+                <td>Electron, Capacitor</td>
+                <td>운영 웹을 그대로 띄우는 데스크톱·모바일 껍데기</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- 타임라인 -->
+    <section id="timeline">
+      <div class="container">
+        <p class="section-label">Timeline</p>
+        <h2 class="section-title">큰 변경과 기획의 흐름</h2>
+
+        <div class="timeline-sides" aria-hidden="true">
+          <span class="side-head side-head-plan">기획 · 구현</span>
+          <span class="side-head side-head-issue">이슈 · 버그</span>
+        </div>
+        <ol class="timeline">
+          <!-- 시기 1 -->
+          <li class="era-heading" data-short="프로토타입">
+            프로토타입 — IndexedDB 위의 위키형 앱
+            <span class="era-range">2026.02 – 2026.04</span>
+          </li>
+          <li class="event side-plan era-1 major" data-short="프로젝트 시작">
+            <div class="date">2026.02.22</div>
+            <div class="card">
+              <h3>프로젝트 시작 — Next.js + IndexedDB(Dexie)</h3>
+              <p>
+                「프로젝트 → 에피소드」 모델과 위키·플롯 화면을 만들었습니다. 모든 데이터는 브라우저 IndexedDB에 두고
+                React Query로 감싼 구조였습니다.
+              </p>
+              <div class="tags"><span class="tag">Dexie</span><span class="tag">React Query</span></div>
+            </div>
+          </li>
+          <li class="event side-plan era-1 major" data-short="로컬 폴더 저장">
+            <div class="date">2026.04.28</div>
+            <div class="card">
+              <h3>로컬 폴더 저장 도입 (File System Access API)</h3>
+              <p>
+                사용자가 고른 폴더에 데이터를 쓰고 IndexedDB를 조회 캐시로 쓰는 혼합 구조로 바꿨습니다.
+              </p>
+              <div class="tags">
+                <span class="tag">FSA</span><a class="tag issue-link" href="#issue-1">이슈 01</a>
+              </div>
+            </div>
+          </li>
+
+          <!-- 시기 2 -->
+          <li class="era-heading" data-short="로컬 우선">
+            로컬 우선 집필 도구 — VSCode형 화면으로 재구성
+            <span class="era-range">2026.05 – 2026.08</span>
+          </li>
+          <li class="event side-plan era-2 major" data-short="VSCode형 화면">
+            <div class="date">2026.05.29</div>
+            <div class="card">
+              <h3>dockview + 파일 트리 재구성</h3>
+              <p>
+                위키형 화면을 접고 사이드바 파일 트리와 분할 패널 에디터로 재구성했습니다. 이때부터 원고·설정이 「파일
+                하나」 단위가 되었습니다.
+              </p>
+              <div class="tags"><span class="tag">dockview</span><span class="tag">Tiptap</span></div>
+            </div>
+          </li>
+          <li class="event side-issue era-2" data-short="IME 중복 입력">
+            <div class="date">2026.07.06</div>
+            <div class="card">
+              <span class="side-badge">버그</span>
+              <h3>한글 IME — Enter가 마지막 글자를 한 번 더 넣는다</h3>
+              <p>조합이 끝나지 않은 Enter가 「조합 확정」과 「제출」로 두 번 해석됐습니다. 모든 Enter 처리에 <code>isComposing</code> 확인을 규약으로 넣었습니다.</p>
+              <div class="tags"><a class="tag issue-link" href="#issue-3">이슈 03</a></div>
+            </div>
+          </li>
+          <li class="event side-plan era-2" data-short="버전·diff">
+            <div class="date">2026.07.07</div>
+            <div class="card">
+              <h3>버전 스냅샷 · 문단 단위 diff</h3>
+              <p>
+                파일마다 스냅샷을 남기고, 원고를 「문단 = 줄」로 펼쳐 jsdiff로 비교하는 워크벤치를 만들었습니다.
+              </p>
+              <div class="tags"><span class="tag">jsdiff</span></div>
+            </div>
+          </li>
+          <li class="event side-plan era-3 major" data-short="결제 착수">
+            <div class="date">2026.07.26</div>
+            <div class="card">
+              <h3>구독·결제 시스템 착수 — Auth.js + Supabase</h3>
+              <p>
+                AI 맞춤법을 유료화하려면 서버가 요청자를 식별해야 했습니다. 클라이언트 전용 인증을 서버 세션으로
+                바꾸고 구독·사용량 테이블을 세웠습니다.
+              </p>
+              <div class="tags"><span class="tag">Auth.js</span><span class="tag">Supabase</span></div>
+            </div>
+          </li>
+          <li class="event side-plan era-2 major" data-short="경로 경계">
+            <div class="date">2026.07.28</div>
+            <div class="card">
+              <h3>저장소 경계를 폴더 핸들에서 경로(NodeRef)로</h3>
+              <p>
+                화면 코드가 저장소 구현을 모르게 하는 리팩터입니다. 이 경계 덕분에 이후 서버 이관 때 호출부가 바뀌지
+                않았습니다.
+              </p>
+              <div class="tags"><a class="tag issue-link" href="#issue-1">이슈 01</a></div>
+            </div>
+          </li>
+          <li class="event side-issue era-2" data-short="패널 옛 경로">
+            <div class="date">2026.07.31</div>
+            <div class="card">
+              <span class="side-badge">버그</span>
+              <h3>폴더 이름을 바꾸면 열린 패널이 옛 경로를 가리킨다</h3>
+              <p><code>getParameters()</code>가 빈 객체를 돌려줘 패널을 다시 겨누는 루프가 통째로 아무 일도 하지 않았습니다. 타입은 맞아 tsc가 잡지 못했습니다.</p>
+              <div class="tags"><span class="tag">dockview</span></div>
+            </div>
+          </li>
+          <li class="event side-plan era-2" data-short="공유 문서">
+            <div class="date">2026.08.04</div>
+            <div class="card">
+              <h3>같은 원고의 분할 레이아웃 동시 편집</h3>
+              <p>한 에디터의 트랜잭션 steps를 다른 에디터에 그대로 전파해, 분할 화면에서 같은 원고를 동시에 편집합니다.</p>
+              <div class="tags"><span class="tag">Tiptap</span><span class="tag">ProseMirror</span><a class="tag issue-link" href="#issue-3">이슈 03</a></div>
+            </div>
+          </li>
+
+          <!-- 시기 3 -->
+          <li class="era-heading" data-short="수익화·AI">
+            수익화와 AI — 정기결제와 AI 기능군
+            <span class="era-range">2026.08 – 2026.10 초</span>
+          </li>
+          <li class="event side-plan era-3 major" data-short="나이스페이">
+            <div class="date">2026.08.24</div>
+            <div class="card">
+              <h3>결제를 나이스페이먼츠 빌링으로 — 실제 정기청구 시작</h3>
+              <p>빌키 발급·승인·정기청구 배치를 구현했습니다.</p>
+              <div class="tags"><span class="tag">NICEPAY 빌링 API</span></div>
+            </div>
+          </li>
+          <li class="event side-plan era-3" data-short="4등급 플랜">
+            <div class="date">2026.09.07</div>
+            <div class="card">
+              <h3>4등급 플랜(Free · Basic · Pro · Premium)</h3>
+              <p>유료 셋은 기능이 같고 사용량 상한만 다르게, 상한은 등급별 최악 원가로 역산했습니다.</p>
+            </div>
+          </li>
+          <li class="event side-plan era-3 major" data-short="OpenAI 전환">
+            <div class="date">2026.09.09</div>
+            <div class="card">
+              <h3>텍스트 AI를 OpenAI로 전환</h3>
+              <p>
+                맞춤법·에이전트를 GPT로 옮겼습니다(이미지 생성까지 OpenAI로 통합).
+              </p>
+              <div class="tags"><span class="tag">OpenAI</span><a class="tag issue-link" href="#issue-4">이슈 04</a></div>
+            </div>
+          </li>
+
+          <!-- 시기 4 -->
+          <li class="era-heading" data-short="서버 이관">
+            서버 이관과 데이터 보호
+            <span class="era-range">2026.10</span>
+          </li>
+          <li class="event side-plan era-4 major" data-short="서버 이관">
+            <div class="date">2026.10.06</div>
+            <div class="card">
+              <h3>1차 저장소를 서버(Supabase)로 이관 결정</h3>
+              <p>
+                세 방식을 비교한 끝에 「여러 기기 사용」을 제품의 약속으로 삼기로 하고, 로컬 폴더·구글 드라이브 백업을 같은 날
+                걷어냈습니다.
+              </p>
+              <div class="tags">
+                <span class="tag removed">로컬 폴더 제거</span><span class="tag">Supabase</span><a class="tag issue-link" href="#issue-1">이슈 01</a>
+              </div>
+            </div>
+          </li>
+          <li class="event side-plan era-4" data-short="이관 완료">
+            <div class="date">2026.10.12</div>
+            <div class="card">
+              <h3>서버 이관 완료</h3>
+              <p>새로고침해도 같은 작품이 열리도록 「어느 작품을 열지」를 localStorage가 아니라 URL이 정하게 했습니다.</p>
+              <div class="tags"><span class="tag">Next.js App Router</span></div>
+            </div>
+          </li>
+          <li class="event side-plan era-4" data-short="서버 검색">
+            <div class="date">2026.10.14</div>
+            <div class="card">
+              <h3>서버 검색 · 버전 기록 표</h3>
+              <p>
+                쓸 때 채운 평문으로 서버가 검색하고, 버전 기록을 파일 경로가 아니라 파일 행에 붙여 이름변경·이동을 저절로
+                따라가게 했습니다.
+              </p>
+              <div class="tags"><span class="tag">PostgreSQL</span></div>
+            </div>
+          </li>
+          <li class="event side-issue era-4" data-short="사용량 한도">
+            <div class="date">2026.10.14</div>
+            <div class="card">
+              <span class="side-badge">동시성</span>
+              <h3>동시 요청이 AI 사용량 한도를 뚫는다</h3>
+              <p>「조회 후 판정」 사이에 요청이 겹치면 한도를 넘겼습니다. 원자적으로 예약하며 판정하고 끝나면 보정하는 「예약 → 정산」으로 바꿨습니다.</p>
+              <div class="tags"><span class="tag">PostgreSQL</span><a class="tag issue-link" href="#issue-4">이슈 04</a></div>
+            </div>
+          </li>
+          <li class="event side-issue era-4" data-short="정기청구 멱등">
+            <div class="date">2026.10.14</div>
+            <div class="card">
+              <span class="side-badge">결제</span>
+              <h3>PG 승인과 DB 확정 사이에서 죽으면 돈만 나간다</h3>
+              <p>결제 전에 청구 키를 먼저 잡고, 결과는 구독 갱신과 한 트랜잭션에 기록하도록 정기청구를 고쳤습니다.</p>
+              <div class="tags"><span class="tag">NICEPAY 빌링 API</span></div>
+            </div>
+          </li>
+          <li class="event side-plan era-4" data-short="플롯 AI 전환">
+            <div class="date">2026.10.17</div>
+            <div class="card">
+              <h3>AI 플롯 카드 생성 제거 → 「카드 한 장으로 원고 초안」</h3>
+              <p>72회 생성 실험 결과를 근거로 AI가 플롯을 짜는 방향을 접고, 작가가 짠 카드를 원고로 펼치는 쪽으로 뒤집었습니다.</p>
+              <div class="tags">
+                <span class="tag removed">방향 전환</span><a class="tag issue-link" href="#issue-4">이슈 04</a>
+              </div>
+            </div>
+          </li>
+          <li class="event side-plan era-4 major" data-short="원고 암호화">
+            <div class="date">2026.10.25</div>
+            <div class="card">
+              <h3>원고 암호화 — 서버 측 봉투 암호화(AES-256-GCM)</h3>
+              <p>개발 DB에 적용하고, 다음 날 운영 DB의 기존 원고 60건·스냅샷 83건을 암호화해 이관했습니다.</p>
+              <div class="tags"><span class="tag">AES-256-GCM</span><span class="tag">Node crypto</span><a class="tag issue-link" href="#issue-2">이슈 02</a></div>
+            </div>
+          </li>
+
+          <!-- 시기 5 -->
+          <li class="era-heading" data-short="운영·멀티 플랫폼">
+            운영과 멀티 플랫폼
+            <span class="era-range">2026.11 –</span>
+          </li>
+          <li class="event side-plan era-5 major" data-short="실사용자">
+            <div class="date">2026.11.01</div>
+            <div class="card">
+              <h3>운영 실사용자 유입 · Pro 무료 체험 · AI 작품 초안</h3>
+              <p>
+                이날부터 마이그레이션은 하위 호환 · 한 트랜잭션 · 승인 후 운영 적용을 규칙으로 삼았습니다.
+              </p>
+              
+            </div>
+          </li>
+          <li class="event side-plan era-5 major" data-short="데스크톱 앱">
+            <div class="date">2026.11.02</div>
+            <div class="card">
+              <h3>데스크톱 앱 — 운영 URL을 띄우는 Electron 껍데기</h3>
+              <p>운영 웹을 그대로 로드하고, 로그인은 시스템 브라우저 → 딥링크 → 쿠키 세션으로 처리합니다.</p>
+              <div class="tags"><span class="tag">Electron</span><span class="tag">electron-updater</span><span class="tag">PKCE</span><a class="tag issue-link" href="#issue-5">이슈 05</a></div>
+            </div>
+          </li>
+          <li class="event side-plan era-5 major" data-short="모바일 앱">
+            <div class="date">2026.11.04</div>
+            <div class="card">
+              <h3>모바일(Capacitor) 1단계 운영 배포 · 모바일 배치 착수</h3>
+              <p>실기기 한글 IME 시험을 계획의 전제로 두고(iOS 통과), dockview 없이 한 화면씩 보이는 모바일 배치를 만들고 있습니다.</p>
+              <div class="tags"><span class="tag">진행 중</span><span class="tag">Capacitor</span><a class="tag issue-link" href="#issue-5">이슈 05</a></div>
+            </div>
+          </li>
+        </ol>
+      </div>
+    </section>
+
+    <!-- 주요 이슈 -->
+    <section id="issues">
+      <div class="container container-wide">
+        <p class="section-label">Key Issues</p>
+        <h2 class="section-title">타임라인 뒤의 기술적 고민</h2>
+        <p class="section-lead">
+          각 이슈는 <strong>배경 → 문제 → 선택지와 결정 → 구현 → 결과 → 회고</strong> 순서로 적었습니다.
+        </p>
+
+        <ol class="issue-index">
+          <li><a href="#issue-1"><span class="index-number">01</span><span class="index-title">저장소 세 번의 전환과 서버 이관 결정</span></a></li>
+          <li><a href="#issue-2"><span class="index-number">02</span><span class="index-title">원고 암호화와 무중단 운영 이관</span></a></li>
+          <li><a href="#issue-3"><span class="index-number">03</span><span class="index-title">집필 에디터의 함정 — 공유 문서·한글 IME</span></a></li>
+          <li><a href="#issue-4"><span class="index-number">04</span><span class="index-title">AI 기능 설계 — 원가, 동시성, 그리고 방향 전환</span></a></li>
+          <li><a href="#issue-5"><span class="index-number">05</span><span class="index-title">웹 하나, 껍데기 셋 — Electron과 Capacitor</span></a></li>
+          <li><a href="#issue-6"><span class="index-number">06</span><span class="index-title">AI와 함께 개발하기 위한 문서 체계</span></a></li>
+        </ol>
+
+        <div class="issues-layout">
+          <!-- 왼쪽 세로 타임라인 — 아래 스크립트가 이슈를 번호순으로 늘어놓고 data-start·data-end로 기간 막대를 그린다 -->
+          <aside class="issue-rail" aria-label="지금 읽는 이슈의 시점">
+            <div class="rail-sticky">
+              <div class="rail-current" aria-live="polite">
+                <span class="rail-current-kind">지금 보는 이슈</span>
+                <strong class="rail-current-number">—</strong>
+                <span class="rail-current-title">아래로 내려 이슈를 읽어 보세요</span>
+                <span class="rail-current-period"></span>
+              </div>
+              <p class="rail-title">이슈 타임라인</p>
+              <div class="rail-axis" aria-hidden="true"><span>2026.02</span><span>2026.11</span></div>
+              <!-- 아래 스크립트가 이슈(.issue[data-start])를 읽어 채운다 -->
+              <ol class="rail-timeline"></ol>
+            </div>
+          </aside>
+
+          <div class="issues-body">
+        <!-- 이슈 01 -->
+        <article class="issue" id="issue-1" data-start="2026-04" data-end="2026-10">
+          <div class="issue-header">
+            <span class="issue-number">ISSUE 01 · 2026.04 – 2026.10</span>
+            <h3>저장소 세 번의 전환과 서버 이관 결정</h3>
+            <p class="issue-summary">
+              IndexedDB → 로컬 폴더 단독 → 서버. 저장 기술보다 「사용자가 원하는 것이 무엇인가」에 집중하기로 했습니다.
+              경로 기반으로 구성한 덕분에 화면 쪽 호출부는 유지한 채 저장소만 갈아끼우는 방식으로 쉽게 이관할 수 있었습니다.
+            </p>
+            <div class="issue-meta">
+              <span class="tag">아키텍처</span><span class="tag">Supabase</span><span class="tag">File System Access API</span>
+            </div>
+          </div>
+
+          <h4>배경</h4>
+          <p>
+            「작가가 자기 원고 파일을 직접 갖는다」는 방향으로 로컬 폴더(File System Access API)를 1차 저장소로 삼았습니다.
+            폴더 트리 + 분할 패널 화면과 파일 단위 저장이 같은 시제품에서 함께 나온 결정이었습니다.
+          </p>
+
+          <h4>문제</h4>
+          <ul>
+            <li><strong>Chromium·Electron에서만 동작</strong> — Safari·Firefox·iOS에는 폴더 API가 없어 모바일 확장이 막혀 있었습니다.</li>
+            <li>브라우저를 다시 켤 때마다 「권한 다시 주기」 클릭, 첫 실행의 폴더 피커를 없앨 수 없었습니다.</li>
+            <li>크롬에 디렉터리 <code>move()</code>가 없어 폴더 이름변경이 <strong>재귀 복사 후 삭제</strong>였습니다 — 수 초간 화면을 잠그고, 중간에 실패하면 반쪽 상태가 남았습니다.</li>
+            <li>여러 파일을 원자적으로 쓸 수 없고, 파인더에서 고친 파일 때문에 색인을 둘 수 없어 검색이 매번 전체를 훑었습니다.</li>
+          </ul>
+
+          <h4>선택지와 결정</h4>
+          <div class="table-scroll">
+            <table class="compare">
+              <thead>
+                <tr><th>선택지</th><th>이점</th><th>단점</th></tr>
+              </thead>
+              <tbody>
+                <tr><td>로컬 폴더 유지</td><td>오프라인 · 파일 소유 · 운영비 0</td><td>브라우저 제약 · 권한 · 원자성 없음 · 여러 기기 불가</td></tr>
+                <tr><td>IndexedDB 단독</td><td>모든 브라우저 · 원자성 · 색인</td><td>브라우저 축출로 데이터 소실 위험 · 여러 기기 불가</td></tr>
+                <tr><td>IndexedDB + 드라이브 백업</td><td>소실 위험 대부분 상쇄</td><td>백업은 동기화가 아님 — 두 기기가 각자 고치면 한쪽이 덮어써짐</td></tr>
+                <tr class="chosen"><td>서버(Supabase)</td><td>모든 환경 · 트랜잭션 · 서버 색인 · 여러 기기</td><td>로그인 필수 · 오프라인 불가 · 운영비 · 원고 보관자 책임</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="decision">
+            <p>
+              <strong>이유:</strong> 타 제품 분석 과정에서 사용자들이 모바일을 적극적으로 활용한다는 사실을 알았습니다.
+              제품을 여러 기기에서 사용할 수 있는 방안을 고안했으나, 드라이브 위에서 동기화 엔진을 만드는 것은 트랜잭션도
+              서버 병합도 없는 환경에서 사용자에게 좋은 경험을 남기기 어렵다고 판단했습니다. 사용자가 아직 없던 시점이라
+              데이터 이관 없이 옮길 수 있는 마지막 기회이기도 했습니다.
+            </p>
+          </div>
+
+          <h4>구현</h4>
+          <ul>
+            <li>
+              <strong>경계를 미리 경로로 옮겨 둔 것이 핵심이었습니다.</strong> 저장소 인터페이스(<code>IWorkspaceStorage</code>)의
+              인자를 폴더 핸들에서 직렬화 가능한 경로(<code>NodeRef</code>)로 바꿨고, 모든 호출은 첫 인자로 저장 영역(<code>'workspace' | 'app'</code>)을
+              명시하게 했습니다. 서버에서는 이 영역이 그대로 <code>work_entry.area</code> 칼럼이 됩니다.
+            </li>
+            <li>
+              서버가 로컬 폴더와 <strong>같은 의미론</strong>(폴더 · 이름변경 · 이미지 사이드카 동반 이동 · 같은 이름 거절)을
+              Postgres RPC로 구현해, 화면 쪽은 저장소가 바뀐 사실을 모르게 했습니다.
+            </li>
+            <li>
+              이미지 키는 경로 대신 uuid로 두어 이름변경과 무관하게 했습니다.
+            </li>
+            <li>이관은 8단계로 나눠 1~7단계를 이틀, 문서·검증 전환·처리방침 반영까지 6일 만에 마쳤습니다.</li>
+          </ul>
+
+          <h4 class="result-heading">결과</h4>
+          <ul class="result-list">
+            <li>경로 기반 설계 덕분에 <strong>저장소를 쓰는 46개 파일의 호출부가 바뀌지 않았습니다.</strong></li>
+            <li>모든 브라우저(모바일 포함)에서 동작하게 되어, 현재 Capacitor 모바일 앱의 전제가 됐습니다.</li>
+            <li>폴더 이름변경이 「재귀 복사 + 삭제」에서 트랜잭션 한 번이 됐고, 서버 검색 색인을 둘 수 있게 됐습니다.</li>
+          </ul>
+
+          <h4 class="retro-heading">회고</h4>
+          <div class="retro">
+            <div>
+              <div class="retro-title">잘한 점</div>
+              <p>서버 이관을 결정하기 전에 저장소 인자를 폴더 핸들에서 경로로 바꿔 둔 덕분에, 서버 이관 작업의 대부분을 이틀 만에 마칠 수 있었습니다.</p>
+            </div>
+            <div>
+              <div class="retro-title">아쉬운 점</div>
+              <p>IndexedDB에서 로컬 폴더로 전환하는 과정에서 이미 브라우저 제약을 발견했는데도, 서버 이관을 빠르게 추진하지 못한 점이 아쉽습니다. 당시에는 다른 대안이 있을 거라는 생각에 불필요한 로직과 기술을 많이 쌓았습니다.</p>
+            </div>
+            <div>
+              <div class="retro-title">배운 점</div>
+              <p>문제를 고민하고 여러 의견을 찾아보는 과정에서, 사용자가 Fabelia를 어떻게 쓰기를 바라는지 깊이 고민하는 계기가 되었습니다.</p>
+            </div>
+            <div>
+              <div class="retro-title">다음에는</div>
+              <p>구현을 시작하기 전에, 기획 단계에서 의문이 들었던 부분을 더 깊이 조사하려 합니다. 세 번의 전환 중 일부는 결정을 늦춘 비용이었기 때문입니다.</p>
+            </div>
+          </div>
+        </article>
+
+        <!-- 이슈 02 -->
+        <article class="issue" id="issue-2" data-start="2026-10" data-end="2026-10">
+          <div class="issue-header">
+            <span class="issue-number">ISSUE 02 · 2026.10.25 – 10.26</span>
+            <h3>원고 암호화와 무중단 운영 이관</h3>
+            <p class="issue-summary">
+              서버로 옮기면서 「남의 저작물 보관자」가 됐습니다. 사용자에게 약속할 수 있는 것과 없는 것을 먼저 나누고, 그
+              범위 안에서 봉투 암호화를 적용했습니다.
+            </p>
+            <div class="issue-meta">
+              <span class="tag">AES-256-GCM</span><span class="tag">Envelope Encryption</span><span class="tag">보안</span>
+            </div>
+          </div>
+
+          <h4>문제</h4>
+          <p>
+            원고가 <code>jsonb</code>·<code>text</code> 평문으로 저장돼, Supabase 대시보드나 SQL 편집기로 행을 열면 그대로
+            보였습니다. 서버 키 하나, DB 덤프 하나가 새면 원고 전체가 샙니다. 「운영자가 확인차 열어 보지 않는다」는
+            정책으로만 막고 있었습니다.
+          </p>
+
+          <h4>선택지와 결정</h4>
+          <div class="table-scroll">
+            <table class="compare">
+              <thead><tr><th>방식</th><th>장점</th><th>기각·채택 이유</th></tr></thead>
+              <tbody>
+                <tr><td>종단간 암호화(B)</td><td>운영자도 볼 수 없음</td><td>구글 로그인뿐이라 키를 유도할 비밀이 없음 · 키를 잃으면 복구 불가 · 서버 검색 상실 · AI 기능 때문에 어차피 완전한 약속 불가</td></tr>
+                <tr class="chosen"><td>서버 측 봉투 암호화(A)</td><td>DB·백업·키 유출에 대응 · 검색·AI 유지</td><td>위협 모델(대시보드 열람 · 키 유출 · 덤프 유출 · 우발적 열람)을 모두 막고, 클라이언트 계약을 바꾸지 않음</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <h4>구현</h4>
+          <ul>
+            <li>원고·검색 평문·버전 스냅샷을 <strong>Route Handler가 AES-256-GCM으로 암호화</strong>해 바이너리 칼럼(<code>bytea</code>)에 넣습니다. 키는 작품마다 하나(DEK)이고, DEK는 환경변수의 마스터 키(KEK)로 감싸 <code>work</code> 행에 둡니다.</li>
+            <li><strong>AAD(추가 인증 데이터)</strong>로 암호문을 작품·행에 묶어, 남의 행에 붙여 넣은 암호문은 복호화 자체가 실패합니다.</li>
+            <li>KEK는 id가 붙은 묶음(<code>{"k1": ...}</code>)으로 두어 교체 경로를 열어 두었고, 개발과 운영은 다른 키를 씁니다.</li>
+            <li>암호화 계층은 왕복·변조 탐지·AAD 불일치·DEK 감싸기·KEK 판독을 키·DB 없이 1초 안에 확인하는 검증 스크립트를 만들었습니다.</li>
+            <li>서버 검색은 라우트가 복호화한 뒤 대조하도록 옮겼습니다. 큰 원고(약 3.9MB) 왕복이 실패해 <strong>압축을 넣은 뒤 통과</strong>시켰습니다.</li>
+            <li><strong>운영 이관은 마이그레이션을 두 단계로 나눴습니다.</strong> 먼저 평문 칼럼을 남긴 채 암호문 칼럼만 추가하고, 새 코드를 배포한 뒤 이관 스크립트로 기존 원고를 암호화해 옮겼습니다. 스크립트는 암호문을 쓰기 전에 메모리에서 다시 풀어 원본과 대조하고, 하나라도 다르면 그 자리에서 멈춥니다. 동작 확인이 끝난 뒤에야 두 번째 마이그레이션으로 평문 칼럼을 지우고 NOT NULL 제약을 걸었습니다.</li>
+          </ul>
+
+          <h4 class="result-heading">결과</h4>
+          <ul class="result-list">
+            <li>운영 DB의 <strong>기존 원고 60건 · 버전 스냅샷 83건</strong>을 암호화해 이관했습니다.</li>
+            <li>약 3.9MB 원고의 저장 요청이 DB 제한 시간(8초)에 걸려 실패하던 것을, 암호화 전에 압축해 <strong>0.2~0.6초</strong>로 줄였습니다.</li>
+          </ul>
+
+          <h4 class="retro-heading">회고</h4>
+          <div class="retro">
+            <div>
+              <div class="retro-title">잘한 점</div>
+              <p>모든 데이터를 암호화하기보다, 사용자에게 민감한 원고 본문·검색 평문·버전 스냅샷을 중심으로 암호화했습니다. 작품명·파일 이름·이미지는 범위에서 뺐고, 백업과 AI 사용에 대해 사용자에게 약속할 수 있는 범위를 기준으로 정했습니다.</p>
+            </div>
+            <div>
+              <div class="retro-title">아쉬운 점</div>
+              <p>큰 원고(약 3.9MB) 저장이 실패한 뒤에야 압축을 넣은 점이 아쉽습니다. 평문일 때는 DB가 압축해 주던 데이터가 암호문이 되면서 압축되지 않았고, 요청이 DB 제한 시간을 넘겼습니다. 암호화로 늘어나는 크기는 설계 단계에서 먼저 따졌어야 했습니다.</p>
+            </div>
+            <div>
+              <div class="retro-title">배운 점</div>
+              <p>KEK를 잃으면 원고 전부를 잃는 구조라, 오프라인 사본 절차까지 운영 문서에 넣었습니다. 암호화는 기능 구현만큼 키를 지키는 운영 절차가 중요하다는 것을 배우는 계기가 되었습니다.</p>
+            </div>
+            <div>
+              <div class="retro-title">다음에는</div>
+              <p>사용자가 민감하게 여기는 기능은 기획 단계에서 미리 고려한 뒤에 구현하려 합니다.</p>
+            </div>
+          </div>
+        </article>
+
+        <!-- 이슈 03 -->
+        <article class="issue" id="issue-3" data-start="2026-06" data-end="2026-10">
+          <div class="issue-header">
+            <span class="issue-number">ISSUE 03 · 2026.06 – 2026.10</span>
+            <h3>집필 에디터의 함정 — 공유 문서 · 한글 IME</h3>
+            <p class="issue-summary">
+              소설 집필 도구라 입력의 거의 전부가 한글이고, 같은 원고를 나란히 띄워 보는 일이 잦습니다. 에러 없이 조용히
+              틀리는 UI 버그를 규칙과 자동 검증으로 막았습니다.
+            </p>
+            <div class="issue-meta">
+              <span class="tag">Tiptap / ProseMirror</span><span class="tag">IME</span>
+            </div>
+          </div>
+
+          <h4>같은 원고를 분할 패널로 띄워 동시에 볼 수 있습니다.</h4>
+          <p>
+            <strong>문제:</strong> 분할 화면의 두 에디터가 각자 문서를 들고 있으면, 한쪽 편집이 다른 쪽의 다음 자동저장에
+            지워집니다.
+          </p>
+          <p>
+            <strong>구현:</strong> 한 에디터에서 난 트랜잭션의 <code>steps</code>를 나머지 에디터에 그대로 dispatch합니다. 같은
+            JS 컨텍스트라 동기 전파이고 rebase가 필요 없으며, 선택 영역은 ProseMirror가 매핑합니다. 디스크에 쓰는 것은
+            파일당 한 패널(owner)뿐입니다.
+            <br />패널마다 에디터의 스키마 인스턴스가 달라서, 편집 내용을 객체째 넘기면 원고가 빈 문서로 바뀌는 사고가
+            있었습니다. 그래서 패널 사이에는 편집 내용을 JSON으로만 전달하고, 다른 패널에서 넘어온 편집은
+            기록에 남기지 않게 했습니다.
+          </p>
+
+          <h4>한글 IME 조합 중 Enter의 중복 입력 버그</h4>
+          <p>
+            <strong>문제:</strong> 한글의 IME 조합이 완료되지 않은 상태일 때, Enter가 「조합 확정」과 「제출」로 두 번 해석되어 마지막 글자가
+            중복 입력되는 버그가 여러 입력창에서 반복됐습니다.
+          </p>
+          <p>
+            <strong>결정:</strong> Enter로 제출하는 모든 핸들러에서 <code>event.nativeEvent.isComposing</code>을 먼저 확인하는
+            것을 <strong>프로젝트 규약</strong>으로 정하고, 네이티브 <code>&lt;form onSubmit&gt;</code> 제출에도 같은 가드를 걸었습니다.
+          </p>
+
+          <h4 class="retro-heading">회고</h4>
+          <div class="retro">
+            <div>
+              <div class="retro-title">잘한 점</div>
+              <p>같은 원고를 여러 패널에 띄울 때 디스크에 쓰는 패널을 파일당 하나(owner)로 정하고 나머지는 트랜잭션을 그대로 전파받게 해, 자동저장끼리 서로 지우는 경로를 구조로 없앴습니다.</p>
+            </div>
+            <div>
+              <div class="retro-title">아쉬운 점</div>
+              <p>한글 IME 조합 중 Enter의 중복 입력이 여러 입력창에서 반복된 뒤에야 프로젝트 규약으로 정했습니다. 오류가 남지 않는 버그라 원인을 바로 추적하지 못했습니다.</p>
+            </div>
+            <div>
+              <div class="retro-title">배운 점</div>
+              <p>같은 문제가 반복되면 사람의 주의력보다 규칙과 자동 검증 스크립트로 대처해야 한다는 것을 배웠습니다.</p>
+            </div>
+            <div>
+              <div class="retro-title">다음에는</div>
+              <p>한글 IME처럼 자동 도구로 재현할 수 없는 자리는 실제 Chrome 프로브와 실기기 확인을 반드시 해야 완료시키도록 하겠습니다.</p>
+            </div>
+          </div>
+        </article>
+
+        <!-- 이슈 04 -->
+        <article class="issue" id="issue-4" data-start="2026-09" data-end="2026-11">
+          <div class="issue-header">
+            <span class="issue-number">ISSUE 04 · 2026.09 – 2026.11</span>
+            <h3>AI 기능 설계 — 원가, 동시성, 그리고 방향 전환</h3>
+            <p class="issue-summary">
+              맞춤법 · 에이전트 대화 · 원고 초안 · 다이어그램 · 이미지 생성. 기능을 늘리는 것보다
+              「한도가 실제로 지켜지는가」와 「작가에게 필요한 방향인가」를 더 오래 고민했습니다.
+            </p>
+            <div class="issue-meta">
+              <span class="tag">OpenAI Responses API</span><span class="tag">NDJSON 스트림</span><span class="tag">사용량 과금</span>
+            </div>
+          </div>
+
+          <h4>AI 모델 통합</h4>
+          <p>
+            텍스트는 OpenAI, 이미지는 Gemini로 나뉘어 있던 것을 OpenAI 하나로 모았습니다.
+            맞춤법 모델은 A/B 테스트를 4회 진행하여 <strong>과교정 0 · 잘못 적용 0</strong>을 확인한 뒤
+            확정했습니다. 플랜별 사용량 상한은 「1인당 최대 원가」가 순매출을 넘지 않도록 역산했습니다.
+          </p>
+
+          <h4>동시 요청이 한도를 뚫는 문제</h4>
+          <p>
+            <strong>문제:</strong> AI 기능은 플랜마다 월 사용량 상한이 있습니다.
+            처음에는 「남은 양 확인 → AI 생성 → 사용량 더하기」 순서로 처리했는데, 확인과 더하기 사이에 AI 생성 시간이 끼어 있어
+            그사이 들어온 요청도 같은 남은 양을 보고 통과했습니다. 예를 들어 이미지가 1장 남은 상태에서 지도와 캐릭터 이미지를
+            동시에 만들면 둘 다 생성됐습니다. 또 사용량 조회가 실패하면 「사용량 0」으로 읽어서, DB 장애 동안에는 한도가 사실상
+            풀려 있었습니다.
+          </p>
+          <p>
+            <strong>구현:</strong> 공연 좌석을 먼저 잡아 두고 결제하는 것처럼, AI를 호출하기 전에 사용량을 먼저 <strong>예약</strong>하도록 바꿨습니다.
+          </p>
+          <ul>
+            <li><strong>예약:</strong> 지금 사용량이 상한 미만이면 예약량을 더하고 통과하도록 처리합니다. 확인과 더하기가 한 번에 일어나므로, 동시에 온 두 번째 요청은 첫 번째가 더한 뒤의 값으로 판정받습니다. 예약량은 맞춤법이면 보낼 글자 수, 이미지면 1장, 텍스트 AI면 입력 글자 수에 최대 출력 분량을 더한 값입니다.</li>
+            <li><strong>정산:</strong> 생성이 끝나면 「실제 사용량 − 예약량」만큼 보정합니다. 실패하거나 빈 응답이면 예약 전체를 돌려줘, 성공한 만큼만 사용량으로 셉니다. 스트리밍 응답은 스트림이 끝나는 시점에 정산해 예약이 남지 않게 했습니다.</li>
+            <li><strong>장애 시 차단:</strong> 사용량 표를 읽지 못하면 통과시키지 않고 막습니다. 사용량을 알 수 없을 때는 원가가 새는 것보다 잠시 막히는 편이 낫다고 판단했습니다.</li>
+          </ul>
+
+          <h4>AI가 플롯을 짜는 기능을 접은 이유</h4>
+          <p>
+            줄거리를 넣으면 AI가 플롯 카드를 만들어 컬럼에 배치하는 기능을 먼저 만들었습니다. 그런데 실제 작가의 작업 순서는
+            <strong>플롯을 먼저 짜고, 그 플롯을 따라 원고를 쓰는 것</strong>이 일반적입니다. AI가 플롯을 짜려면 결국 이야기
+            전체를 알고 이해하고 있어야 하는데, 그 이해는 작가에게 있습니다. AI가 플롯을 짜는 기능은 작가의 작업 흐름과
+            반대 방향으로 흘러가고 있었습니다.
+          </p>
+          <p>
+            <strong>72회 생성 실험</strong>을 진행한 결과, 컬럼 이름을 「1부~4부」로 바꾸고 설명을 빼면 배치
+            일치율이 59%로 떨어져, 모델은 줄거리를 이해하기보다 기계적으로 나누고 있었습니다.
+          </p>
+          <div class="decision">
+            <p><strong>결정:</strong> AI 플롯 카드 생성을 걷어내고 작가가 플롯을 짜면 <strong>그 플롯으로 AI가 원고 초안을 쓰는</strong> 방향으로 변경했습니다.</p>
+            <p><strong>이유:</strong> 이야기의 뼈대인 플롯은 작가의 몫이고, AI는 그 뼈대를 문장으로 옮기는 쪽이 작가의 작업 순서와 맞는 역할이라고 판단했습니다.</p>
+          </div>
+
+          <h4 class="result-heading">결과</h4>
+          <ul class="result-list">
+            <li>텍스트·이미지 AI를 <strong>OpenAI 하나로</strong> 모아, API 키와 과금 경로를 하나로 줄였습니다.</li>
+            <li>동시 요청이 한도를 넘을 수 있는 양을 <strong>요청 하나의 예약량</strong>으로 줄였고, DB 장애 중에도 한도가 열리지 않습니다.</li>
+            <li>AI 플롯 카드 생성을 걷어내고, 작가가 짠 <strong>플롯 카드로 AI가 원고 초안을 쓰는 기능</strong>을 출시했습니다.</li>
+          </ul>
+
+          <h4 class="retro-heading">회고</h4>
+          <div class="retro">
+            <div>
+              <div class="retro-title">잘한 점</div>
+              <p>AI 기능을 붙일 때마다 「사용자 한 명이 끝까지 쓰면 원가가 얼마인가」부터 계산했습니다. 기능보다 원가와 한도를 먼저 정해 두어, 기능이 늘어나도 요금제가 안정적으로 유지되도록 설계했습니다.</p>
+            </div>
+            <div>
+              <div class="retro-title">아쉬운 점</div>
+              <p>AI 응답은 느리고 언제든 실패할 수 있다는 점을 처음부터 설계에 넣지 못했습니다. 생성 중에 들어온 요청, 도중에 끊긴 스트리밍, DB 장애 같은 경우를 하나씩 겪은 뒤에야 예약과 정산 구조로 정리했습니다.</p>
+            </div>
+            <div>
+              <div class="retro-title">배운 점</div>
+              <p>AI의 결과가 그럴듯해 보인다고 해서 제대로 이해한 것은 아니라는 점을 배웠습니다. 같은 입력에도 결과가 달라지고, 조건을 바꿔 실험해 봐야 실제로 이해하고 있는지 알 수 있었습니다.</p>
+            </div>
+            <div>
+              <div class="retro-title">다음에는</div>
+              <p>AI 기능을 기획할 때 「AI가 할 수 있는가」보다 「작가가 이 일을 AI에게 맡기고 싶어 하는가」를 먼저 묻고, 작은 실험으로 확인한 뒤에 구현하려 합니다.</p>
+            </div>
+          </div>
+        </article>
+
+        <!-- 이슈 05 -->
+        <article class="issue" id="issue-5" data-start="2026-08" data-end="2026-11" data-ongoing>
+          <div class="issue-header">
+            <span class="issue-number">ISSUE 05 · 2026.08 – 진행 중</span>
+            <h3>웹 하나, 껍데기 셋 — Electron과 Capacitor</h3>
+            <p class="issue-summary">
+              「기능은 웹이 단일 소스」라는 원칙으로 데스크톱·모바일 앱을 운영 웹을 띄우는 얇은 껍데기로 설계했습니다.
+            </p>
+            <div class="issue-meta">
+              <span class="tag">Electron</span><span class="tag">Capacitor</span><span class="tag">OAuth · 딥링크</span>
+            </div>
+          </div>
+
+          <h4>배경</h4>
+          <p>
+            저장소를 서버로 옮긴 이유(이슈 01)는 「여러 기기에서 쓸 수 있어야 한다」는 것이었습니다. 타 제품을 분석하면서
+            사용자들이 모바일을 적극적으로 활용한다는 사실을 알았고, 서버 이관으로 모든 브라우저에서 동작하게 되면서 앱으로
+            넓힐 전제가 갖춰졌습니다.
+          </p>
+          <p>
+            기획 단계의 요구는 두 가지였습니다. 데스크톱 앱은 웹과 기능이 거의 같아야 하고, 모바일 앱은 가능하면 같게 하되
+            비용이 너무 크면 모바일 전용 화면도 검토한다는 것이었습니다. 플랫폼마다 기능을 따로 만들면 같은 기능을 여러 번
+            고쳐야 하므로, 기능은 웹 하나에 두고 앱은 그 웹을 띄우는 껍데기로 만드는 방향을 잡았습니다.
+          </p>
+
+          <h4>설계</h4>
+          <div class="table-scroll">
+            <table class="compare">
+              <thead><tr><th>항목</th><th>구조</th></tr></thead>
+              <tbody>
+                <tr><td>화면</td><td>운영 URL을 그대로 로드</td></tr>
+                <tr><td>인증</td><td>시스템 브라우저 로그인 → <code>fabelia://</code> 딥링크 일회용 코드 → 웹과 같은 쿠키 세션</td></tr>
+                <tr><td>갱신</td><td>웹 배포가 즉시 반영 · 껍데기는 드물게</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <h4>구현</h4>
+          <ul>
+            <li><strong>데스크톱 로그인:</strong> 일회용 코드는 암호화 토큰(JWE)에 담고, 코드를 가로채도 쓸 수 없도록 PKCE로 묶었습니다. 또 앱 창 안에서 구글 로그인을 직접 부르면 막히므로 로그인 시작점을 <code>startGoogleSignIn</code> 하나로 모았습니다.</li>
+            <li><strong>종료 시 저장:</strong> 앱을 닫기 전에 대기 중인 자동저장을 마무리하는 등록 지점을 두었습니다.</li>
+            <li>
+              <strong>모바일 앱:</strong> Capacitor 앱은 데스크톱과 같은 로그인 경로를 재사용합니다. 데스크톱은 여러 패널을 나란히 띄우는 화면(dockview)이지만, 모바일에서는 한 번에 한 화면만 보이도록
+              배치를 새로 만들었습니다. 「앱에서 실행 중인가」와 「모바일 크기 화면인가」는 따로 판단하게 해, 모바일 브라우저로
+              접속해도 같은 모바일 배치가 나옵니다. 또 모바일에서는 패널 라이브러리(dockview)를 내려받지 않도록, 그 라이브러리를
+              쓸 수 있는 파일을 정해 두고 검사합니다.
+            </li>
+          </ul>
+
+          <h4 class="result-heading">결과</h4>
+          <ul class="result-list">
+            <li>하나의 운영 웹으로 <strong>macOS 앱을 빌드해 서명·공증 후 배포</strong>했고, 자동 업데이트로 새 버전을 받아 다시 켜지는 것까지 확인했습니다.</li>
+            <li>같은 웹으로 <strong>iOS 앱을 빌드</strong>해, 시뮬레이터에서 구글 로그인부터 원고 저장까지 정상 동작을 확인했습니다.</li>
+          </ul>
+
+          <h4 class="retro-heading">회고</h4>
+          <div class="retro">
+            <div>
+              <div class="retro-title">잘한 점</div>
+              <p>기능의 원본을 웹 하나로 두고 데스크톱·모바일은 운영 URL을 띄우는 껍데기로 만들어, 웹 배포만으로 모든 플랫폼에 기능이 반영되도록 설계했습니다.</p>
+            </div>
+            <div>
+              <div class="retro-title">아쉬운 점</div>
+              <p>모바일을 고려하지 않은 초기 구조에서 출발하다 보니 화면 배치를 미리 분리해 두지 않았고, 모바일을 지원하는 과정에서 기능 검증을 여러 번 반복해야 했습니다.</p>
+            </div>
+            <div>
+              <div class="retro-title">배운 점</div>
+              <p>앱 껍데기만 분리하면 하나의 웹으로 여러 플랫폼을 운영할 수 있다는 것을 배웠습니다.</p>
+            </div>
+            <div>
+              <div class="retro-title">다음에는</div>
+              <p>웹을 앱 껍데기로 감싸 만든 첫 프로젝트라, 앱 사용 경험에 대한 이해는 아직 부족합니다. 출시 후 사용자 피드백을 받아 모바일 경험을 개선해 나가려 합니다.</p>
+            </div>
+          </div>
+        </article>
+
+        <!-- 이슈 06 -->
+        <article class="issue" id="issue-6" data-start="2026-02" data-end="2026-11" data-ongoing>
+          <div class="issue-header">
+            <span class="issue-number">ISSUE 06 · 2026.02 – 진행 중</span>
+            <h3>AI와 함께 개발하기 위한 문서 체계</h3>
+            <p class="issue-summary">
+              Claude Code를 페어 프로그래머로 쓰면서, 「같은 함정을 두 번 밟지 않게」 하는 것이 코드만큼 중요했습니다.
+            </p>
+            <div class="issue-meta">
+              <span class="tag">Claude Code</span><span class="tag">문서 주도 개발</span>
+            </div>
+          </div>
+
+          <h4>문제</h4>
+          <p>
+            규약과 함정을 한 파일(<code>CLAUDE.md</code>)에 쌓다 보니 18만 자를 넘었고, 끝난 작업 기록과 지금의 규칙이
+            섞여 무엇이 유효한지 알기 어려워졌습니다. 「아직 확인하지 않았다」는 메모가 곳곳에 흩어져 끝났는지 아무도 몰랐습니다.
+          </p>
+
+          <h4>결정과 구현</h4>
+          <ul>
+            <li><strong>문서의 역할을 넷으로 나눴습니다</strong> — 전역 규약(<code>CLAUDE.md</code>) · 미룬 작업(<code>TODO.md</code>, 끝나면 줄째 삭제) · 기억할 과거(<code>HISTORY.md</code>, 동작 근거로 쓰지 않음) · 영역별 규약(<code>.claude/rules/*.md</code> 22개,해당 파일을 열 때만 로드).</li>
+            <li>큰 작업은 계획 문서(결정 표 · 위협 모델 · 런북)를 먼저 쓰고 승인한 뒤 착수합니다. <code>docs/</code>에 40여 개의 계획·결정 문서가 있습니다.</li>
+            <li>걷어낸 기능도 「무엇이 있었고, 왜 걷어냈고, 다시 만들 때 어떤 함정이 있는가」를 남깁니다.</li>
+          </ul>
+
+          <h4 class="retro-heading">회고</h4>
+          <div class="retro">
+            <div>
+              <div class="retro-title">잘한 점</div>
+              <p>걷어낸 기능까지 「왜 걷어냈고, 다시 만들 때 무엇이 함정인가」를 남겨, 지난 결정의 기록이 다음 설계의 입력이 됐습니다.</p>
+            </div>
+            <div>
+              <div class="retro-title">아쉬운 점</div>
+              <p>규약을 한 파일에 쌓아 CLAUDE.md가 18만 자를 넘을 때까지 정리를 미뤘습니다. 끝난 기록과 지금의 규칙이 섞여 무엇이 유효한지 흐려졌습니다.</p>
+            </div>
+            <div>
+              <div class="retro-title">배운 점</div>
+              <p>문서가 긴 것보다, 지금 유효한 규칙과 지난 기록이 섞이는 것이 더 나쁜 결과를 가져올 수 있다는 것을 배웠습니다.</p>
+            </div>
+            <div>
+              <div class="retro-title">다음에는</div>
+              <p>「미룬 작업은 끝나면 지우고, 기록은 따로 둔다」는 역할 분리를 처음부터 문서 구조에 담으려 합니다.</p>
+            </div>
+          </div>
+        </article>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 마무리 -->
+    <section id="closing" class="closing">
+      <div class="container">
+        <p class="section-label">Retrospective</p>
+        <h2 class="section-title">이 프로젝트에서 얻은 것</h2>
+        <p class="section-lead">파벨리아(Fabelia) 프로젝트를 진행하면서 가장 많이 한 일은 기능을 만드는 것만큼, 만든 것을 근거를 갖고 걷어내는 일이었습니다.</p>
+        <ol class="closing-list">
+          <li>
+            <span class="closing-num" aria-hidden="true">01</span>
+            <div>
+              <h3>기획 역량</h3>
+              <p class="closing-sub">사용자의 니즈에서 제품 방향을 정한다</p>
+              <p>저장 기술보다 사용자가 제품을 어떻게 쓰는지를 먼저 봤습니다. 타 제품 분석에서 사용자들이 모바일을 적극적으로 활용한다는 것을 확인하고 저장소를 서버로 옮겨 여러 기기에서 쓸 수 있게 했습니다. AI 플롯 생성은 작가의 작업 순서(플롯 → 원고)와 반대라는 판단과 72회 실험 결과를 근거로 걷어내고, 작가가 짠 플롯으로 원고 초안을 쓰는 기능으로 방향을 바꿨습니다.</p>
+            </div>
+          </li>
+          <li>
+            <span class="closing-num" aria-hidden="true">02</span>
+            <div>
+              <h3>디자인(UX) 역량</h3>
+              <p class="closing-sub">사용자가 머무는 곳과 망설이는 곳을 데이터로 본다</p>
+              <p>홈페이지를 만들 때 Microsoft Clarity로 사용자의 클릭·스크롤 패턴을 살펴, 사용자가 어디에 오래 머물고 어디서 망설이는지 확인했습니다. 앱에서는 여러 패널을 나란히 띄우는 데스크톱 화면이 모바일에는 맞지 않는다고 보고, 한 번에 한 화면씩 넘기는 모바일 배치를 따로 만들었습니다.</p>
+            </div>
+          </li>
+          <li>
+            <span class="closing-num" aria-hidden="true">03</span>
+            <div>
+              <h3>기술 역량</h3>
+              <p class="closing-sub">필요한 기능에 맞는 기술을 고른다</p>
+              <p>기능이 요구하는 조건을 먼저 정하고 기술을 골랐습니다. 여러 기기 사용이 필요해지자 IndexedDB·로컬 폴더 대신 트랜잭션과 서버 색인이 있는 Supabase로 옮겼고, 원고 암호화는 검색과 AI 기능을 지키기 위해 종단간 암호화 대신 서버 측 봉투 암호화를 택했습니다. 데스크톱·모바일 앱은 기능을 웹 하나에 두기 위해 운영 웹을 띄우는 Electron·Capacitor 껍데기로 만들었습니다.</p>
+            </div>
+          </li>
+          <li>
+            <span class="closing-num" aria-hidden="true">04</span>
+            <div>
+              <h3>문제 해결 역량</h3>
+              <p class="closing-sub">원인을 끝까지 쫓아 재발을 막는다</p>
+              <p>에러 없이 조용히 틀리는 문제를 끝까지 추적했습니다. 한글 IME 조합 중 Enter의 중복 입력은 규약과 자동 검증으로, 동시 요청이 사용량 한도를 넘는 문제는 「예약 → 생성 → 정산」 구조로, 큰 원고의 저장 실패는 암호화 전 압축으로 해결했습니다. 해결에서 끝내지 않고 같은 실수가 다시 나지 않도록 규칙으로 남겼습니다.</p>
+            </div>
+          </li>
+          <li>
+            <span class="closing-num" aria-hidden="true">05</span>
+            <div>
+              <h3>AI 협업·운영 역량</h3>
+              <p class="closing-sub">AI를 동료로 두고 개발부터 운영까지 혼자 책임진다</p>
+              <p>AI를 페어 프로그래머로 두고, 지금 유효한 규칙·결정·지난 기록을 역할별 문서로 나눠 함께 일했습니다. 이 체계 덕분에 1인 개발로도 운영 DB 이관, 정기 결제, 데스크톱·모바일 배포까지 맡을 수 있었습니다. 운영 DB 이관은 런북을 먼저 쓰고 실행했고, 실사용자가 생긴 뒤에는 마이그레이션을 하위 호환 · 한 트랜잭션 · 승인 후 운영 적용으로 관리했습니다.</p>
+            </div>
+          </li>
+        </ol>
+      </div>
+    </section>
+
+    <footer>
+      <div class="container">
+        <p>정효진 포트폴리오 · 2026.11.11 작성</p>
+      </div>
+    </footer>
+
+    <!-- 맨 위로 — 첫 화면을 지나면 나타난다 -->
+    <button type="button" class="to-top" aria-label="맨 위로">
+      <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="M12 19V5M5 12l7-7 7 7" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" /></svg>
+    </button>
+
+    <script>
+      // 맨 위로 버튼 — 화면 한 장 높이만큼 내려가면 보이고, 누르면 부드럽게 맨 위로 간다
+      (function () {
+        const button = document.querySelector('.to-top');
+        if (!button) return;
+        const toggle = () => button.classList.toggle('is-visible', window.scrollY > window.innerHeight * 0.8);
+        window.addEventListener('scroll', toggle, { passive: true });
+        button.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+        toggle();
+      })();
+    </script>
+    <script>
+      // 이슈 구역 왼쪽의 세로 타임라인 — 이슈를 번호순으로 늘어놓고 기간 막대를 그리며, 지금 읽는 이슈를 강조한다
+      (function () {
+        const rail = document.querySelector('.issue-rail');
+        if (!rail) return;
+        const list = rail.querySelector('.rail-timeline');
+        const currentNumber = rail.querySelector('.rail-current-number');
+        const currentTitle = rail.querySelector('.rail-current-title');
+        const currentPeriod = rail.querySelector('.rail-current-period');
+        const header = document.querySelector('.top-nav');
+
+        // 기간 막대의 눈금 — 2026.02(첫 커밋)부터 2026.11까지 열 달
+        const AXIS_START = 2026 * 12 + 1;
+        const AXIS_MONTHS = 10;
+        const toIndex = (month) => {
+          const [year, mm] = month.split('-').map(Number);
+          return year * 12 + (mm - 1) - AXIS_START;
+        };
+
+        // 1) 이슈마다 번호·제목·기간을 읽는다 (본문 순서 = 번호순)
+        const issues = [...document.querySelectorAll('.issue[data-start]')].map((element) => {
+          const [numberPart, periodPart] = element
+            .querySelector('.issue-number')
+            .textContent.split('·')
+            .map((part) => part.trim());
+          return {
+            element,
+            start: element.dataset.start,
+            end: element.dataset.end,
+            ongoing: element.hasAttribute('data-ongoing'),
+            digits: numberPart.replace('ISSUE', '').trim(),
+            number: numberPart.replace('ISSUE', '이슈'),
+            title: element.querySelector('h3').textContent.trim(),
+            period: periodPart,
+          };
+        });
+
+        // 2) 본문과 같은 번호순으로 레일에 그린다 — 언제였는지는 기간 막대로 보인다
+        issues.forEach((issue) => {
+          const row = document.createElement('li');
+          row.className = 'rail-issue';
+          const button = document.createElement('button');
+          button.type = 'button';
+          button.title = issue.number + ' · ' + issue.title;
+          button.innerHTML =
+            '<span class="rail-period"></span>' +
+            '<span class="rail-label"><span class="rail-number"></span><span class="rail-name"></span></span>' +
+            '<span class="rail-bar"><span class="rail-span"></span></span>';
+          button.querySelector('.rail-period').textContent = issue.period;
+          button.querySelector('.rail-number').textContent = issue.digits;
+          button.querySelector('.rail-name').textContent = issue.title.split(' — ')[0];
+          const span = button.querySelector('.rail-span');
+          const from = toIndex(issue.start);
+          const to = toIndex(issue.end);
+          span.style.left = (from / AXIS_MONTHS) * 100 + '%';
+          span.style.width = ((to - from + 1) / AXIS_MONTHS) * 100 + '%';
+          span.classList.toggle('is-ongoing', issue.ongoing);
+          button.addEventListener('click', () => issue.element.scrollIntoView({ behavior: 'smooth', block: 'start' }));
+          row.appendChild(button);
+          list.appendChild(row);
+          issue.row = row;
+        });
+
+        let activeIssue;
+        function setActive(issue) {
+          if (issue === activeIssue) return;
+          activeIssue = issue;
+          list.classList.toggle('has-issue', !!issue);
+          issues.forEach((entry) => {
+            entry.element.classList.toggle('is-current', entry === issue);
+            entry.row.classList.toggle('is-current', entry === issue);
+          });
+
+          if (issue) {
+            currentNumber.textContent = issue.number;
+            currentTitle.textContent = issue.title;
+            currentPeriod.textContent = issue.period;
+          } else {
+            currentNumber.textContent = '—';
+            currentTitle.textContent = '아래로 내려 이슈를 읽어 보세요';
+            currentPeriod.textContent = '';
+          }
+
+          // 레일이 잘려 있으면 지금 이슈가 보이게 안쪽만 스크롤한다
+          if (issue && list.scrollHeight > list.clientHeight) {
+            const top = issue.row.offsetTop - list.clientHeight / 3;
+            list.scrollTo({ top: Math.max(0, top), behavior: 'smooth' });
+          }
+        }
+
+        // 기준선(헤더 아래 + 화면의 30%)을 넘은 마지막 이슈를 「지금 읽는 이슈」로 본다
+        function update() {
+          const line = header.getBoundingClientRect().bottom + window.innerHeight * 0.3;
+          let found = null;
+          for (const entry of issues) {
+            if (entry.element.getBoundingClientRect().top <= line) found = entry;
+            else break;
+          }
+          setActive(found);
+        }
+
+        let scheduled = false;
+        window.addEventListener(
+          'scroll',
+          () => {
+            if (scheduled) return;
+            scheduled = true;
+            requestAnimationFrame(() => {
+              scheduled = false;
+              update();
+            });
+          },
+          { passive: true },
+        );
+        window.addEventListener('resize', update);
+        update();
+      })();
+    </script>
+  </body>
+</html>
